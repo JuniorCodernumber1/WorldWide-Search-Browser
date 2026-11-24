@@ -12,13 +12,13 @@ This is a desktop browser application, not a from-scratch HTML rendering engine.
 - Search engine selector: Google, Bing, DuckDuckGo, Yahoo, Yandex, Ecosia, AOL, Internet Archive, SearXNG, Internet Explorer, Excite (1995), Infoseek (1994), Web Crawler (1994), Lycos (1994), Dogpile, AltaVista (1995), Mojeek, StartPage, WolframAlpha, MetaGer, Swisscows, Qwant, Seznam
 - Classic 1990s search engines: Excite, Infoseek, and Lycos run locally with recreated 1990s interfaces and working search (powered by Google). Web Crawler links to the current webcrawler.com (now a metasearch engine). Start pages are generated dynamically in `%LOCALAPPDATA%\CustomBrowser\`.
 - Internet Explorer option activates a standalone IE9-style UI recreation: simple IE9-era start page (logo, Favorites/Tools/Safety bar, era links, search bar), IE window title, IE toolbar labels/layout, and IE-style icon. Searches go directly to Bing. The start page is written to `%LOCALAPPDATA%\CustomBrowser\ie_start.html`.
-- Clear Data button (toolbar): deletes all user data including settings, IE start page, and WebView2 profile (cookies, localStorage, etc.). Resets search engine to Bing.
-- Clear History button (toolbar): clears localStorage and sessionStorage for all open tabs.
+- Settings dropdown menu with theme (light/dark mode), timezone selection, Clear Data, and Clear History options
+- Time display in toolbar showing current time in selected timezone (12 timezone options available)
 - Per-tab navigation history state
 - Opens `target=_blank`/new-window requests as new tabs
 - Native C++ Win32 UI
-- Custom browser icon (blue globe with "WorldWide Internet Search Engine" text)
-- Dynamic background color based on Windows toolbar color and system dark/light mode setting
+- Dynamic icons per search engine (loads from icons folder with procedural fallback)
+- Dynamic background color based on user-selected light/dark theme
 
 ## Requirements
 
@@ -45,7 +45,6 @@ Output:
 ```text
 build\CustomBrowser.exe
 build\WebView2Loader.dll
-build\browser_icon.png
 ```
 
 ## Run
@@ -54,13 +53,14 @@ build\browser_icon.png
 .\build\CustomBrowser.exe
 ```
 
-Keep `WebView2Loader.dll` and `browser_icon.png` next to the executable.
+Keep `WebView2Loader.dll` next to the executable. Search engine icons are loaded from the `icons/` folder in the project directory.
 
 ## Notes
 
 - User data is stored under `%LOCALAPPDATA%\CustomBrowser\WebView2`.
 - Browser settings are stored in `%LOCALAPPDATA%\CustomBrowser\settings.txt`.
+- Settings include: search engine, dark mode (dark_mode=0/1), and timezone (timezone=...).
 - The SearXNG instance URL can be changed with `searxng_url=` in `settings.txt`.
 - The default home page is `https://www.bing.com`.
-- `build.ps1` signs the exe with a local `CN=Custom Browser Dev` certificate and trusts it under `Cert:\CurrentUser\TrustedPublisher` so Smart App Control can launch it.
-- If WebView2 Runtime is missing, the app shows an error message.
+- Icon files for search engines are stored in the `icons/` folder; procedural fallback icons are used if files are missing.
+- Code signing is currently disabled in the build script to avoid Smart App Control blocking.
