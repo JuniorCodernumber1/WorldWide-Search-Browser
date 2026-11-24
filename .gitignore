@@ -1,0 +1,4 @@
+build/
+third_party/webview2/*.nupkg
+third_party/webview2/*.zip
+webview2-index.json
