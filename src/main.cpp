@@ -109,20 +109,15 @@ enum class SearchEngine {
     AOL = 6,
     InternetArchive = 7,
     Searxng = 8,
-    InternetExplorer = 9,
-    Excite = 10,
-    Infoseek = 11,
-    WebCrawler = 12,
-    Lycos = 13,
-    Dogpile = 14,
-    AltaVista = 15,
-    Mojeek = 16,
-    StartPage = 17,
-    WolframAlpha = 18,
-    MetaGer = 19,
-    Swisscows = 20,
-    Qwant = 21,
-    Seznam = 22,
+    WebCrawler = 9,
+    Dogpile = 10,
+    Mojeek = 11,
+    StartPage = 12,
+    WolframAlpha = 13,
+    MetaGer = 14,
+    Swisscows = 15,
+    Qwant = 16,
+    Seznam = 17,
 };
 
 struct SearchEngineDef {
@@ -142,13 +137,8 @@ constexpr SearchEngineDef kSearchEngineDefs[] = {
     {L"AOL", "aol", L"https://search.aol.com/aol/search?q=", L"https://search.aol.com"},
     {L"Internet Archive", "internetarchive", L"https://archive.org/search?query=", L"https://archive.org"},
     {L"SearXNG", "searxng", nullptr, nullptr},
-    {L"Internet Explorer", "internetexplorer", nullptr, nullptr},
-    {L"Excite (1995)", "excite", nullptr, L""},
-    {L"Infoseek (1994)", "infoseek", nullptr, L""},
-    {L"Web Crawler (1994)", "webcrawler", L"https://www.webcrawler.com/?q=", L"https://www.webcrawler.com"},
-    {L"Lycos (1994)", "lycos", nullptr, L""},
+    {L"Web Crawler", "webcrawler", L"https://www.webcrawler.com/?q=", L"https://www.webcrawler.com"},
     {L"Dogpile", "dogpile", L"https://www.dogpile.com/serp?q=", L"https://www.dogpile.com"},
-    {L"AltaVista (1995)", "altavista", nullptr, L""},
     {L"Mojeek", "mojeek", L"https://www.mojeek.com/search?q=", L"https://www.mojeek.com"},
     {L"StartPage", "startpage", L"https://www.startpage.com/sp/search?query=", L"https://www.startpage.com"},
     {L"WolframAlpha", "wolframalpha", L"https://www.wolframalpha.com/input?i=", L"https://www.wolframalpha.com"},
@@ -186,928 +176,9 @@ std::string HtmlEscape(const std::string& value) {
     return out;
 }
 
-std::string BuildIeStartPageHtml() {
-    return std::string(R"HTML(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Internet Explorer</title>
-<style>
-  html, body { margin: 0; padding: 0; height: 100%; font-family: Tahoma, "Segoe UI", sans-serif; background: #fff; }
-  #commandbar { background: linear-gradient(#fdfdfd, #ececec); border-bottom: 1px solid #d4d4d4; padding: 4px 12px; font-size: 12px; color: #333; }
-  #commandbar span { margin-right: 22px; cursor: default; }
-  #commandbar span:hover { text-decoration: underline; }
-  #toplinks { background: #f5f5f5; border-bottom: 1px solid #e2e2e2; padding: 5px 14px; font-size: 12px; }
-  #toplinks a { color: #444; text-decoration: none; margin-right: 18px; }
-  #toplinks a:hover { text-decoration: underline; }
-  #main { display: flex; flex-direction: column; align-items: center; padding-top: 50px; }
-  #logo { margin-bottom: 14px; }
-  #iedition { font-size: 26px; color: #1a1a1a; margin-bottom: 20px; }
-  #searchbar { margin-bottom: 20px; }
-  #searchbar form { display: flex; gap: 8px; }
-  #searchbar input { width: 300px; padding: 4px 8px; font-size: 13px; border: 1px solid #999; font-family: Tahoma, sans-serif; }
-  #searchbar button { padding: 4px 16px; font-size: 12px; background: linear-gradient(#fbfbfb, #e0e0e0); border: 1px solid #999; cursor: pointer; font-family: Tahoma, sans-serif; }
-  #searchbar button:hover { background: linear-gradient(#ffffff, #f0f0f0); }
-  #addresshint { font-size: 12px; color: #666; }
-  #footer { position: absolute; bottom: 16px; width: 100%; text-align: center; font-size: 11px; color: #999; }
-</style>
-</head>
-<body>
-<div id="commandbar"><span>Favorites</span><span>Tools</span><span>Safety</span></div>
-<div id="toplinks">
-  <a href="https://www.msn.com">MSN</a>
-  <a href="https://www.bing.com/news">News</a>
-  <a href="https://www.bing.com/sports">Sports</a>
-  <a href="https://www.bing.com/weather">Weather</a>
-  <a href="https://outlook.live.com">Mail</a>
-  <a href="https://www.office.com">Office</a>
-</div>
-<div id="main">
-  <div id="logo">
-    <svg width="88" height="88" viewBox="0 0 32 32">
-      <ellipse cx="16" cy="16" rx="14.5" ry="5.6" fill="none" stroke="#f7b500" stroke-width="2.2" transform="rotate(-16 16 16)"/>
-      <circle cx="16" cy="16" r="9.6" fill="#0072c6"/>
-      <text x="16" y="20.4" font-family="Segoe UI, Tahoma, sans-serif" font-size="12.5" font-weight="bold" fill="#ffffff" text-anchor="middle">e</text>
-    </svg>
-  </div>
-  <div id="iedition">Internet Explorer</div>
-  <div id="searchbar">
-    <form action="https://www.bing.com/search" method="get">
-      <input type="text" name="q" placeholder="Search the web" autofocus autocomplete="off">
-      <input type="hidden" name="ensearch" value="1">
-      <button type="submit">Search</button>
-    </form>
-  </div>
-  <div id="addresshint">Or type a web address in the address bar above</div>
-</div>
-<div id="footer">Recreated Internet Explorer 9 start page</div>
-</body>
-</html>
-)HTML");
-}
 
-std::string BuildIeResultsPageHtml(const std::wstring& query) {
-    std::string q = HtmlEscape(NarrowToUtf8(query));
-    std::string bingUrl = "https://www.bing.com/search?q=" + q + "&ensearch=1";
 
-    return std::string(R"HTML(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Bing - Internet Explorer</title>
-<style>
-  html, body { margin: 0; padding: 0; height: 100%; font-family: Tahoma, "Segoe UI", sans-serif; background: #fff; }
-  #header { background: linear-gradient(#fdfdfd, #ececec); border-bottom: 1px solid #d4d4d4; padding: 8px 16px; display: flex; align-items: center; gap: 20px; }
-  #binglogo { font-size: 24px; font-weight: bold; color: #008373; }
-  #searchbar { flex: 1; display: flex; gap: 8px; }
-  #searchbar input { flex: 1; padding: 4px 8px; font-size: 13px; border: 1px solid #999; font-family: Tahoma, sans-serif; }
-  #searchbar button { padding: 4px 16px; font-size: 12px; background: linear-gradient(#fbfbfb, #e0e0e0); border: 1px solid #999; cursor: pointer; font-family: Tahoma, sans-serif; }
-  #searchbar button:hover { background: linear-gradient(#ffffff, #f0f0f0); }
-  #main { padding: 20px 30px; }
-  #resultsinfo { font-size: 12px; color: #666; margin-bottom: 15px; }
-  .result { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-  .result h3 { margin: 0 0 5px 0; font-size: 16px; }
-  .result h3 a { color: #1a0dab; text-decoration: none; }
-  .result h3 a:hover { text-decoration: underline; }
-  .result .url { font-size: 12px; color: #006621; margin-bottom: 5px; }
-  .result .snippet { font-size: 13px; color: #333; line-height: 1.4; }
-  .result .cached { font-size: 11px; color: #006621; margin-top: 5px; }
-  #sidebar { float: right; width: 250px; margin-left: 30px; }
-  .sidebar-box { background: #f9f9f9; border: 1px solid #ddd; padding: 12px; margin-bottom: 15px; border-radius: 4px; }
-  .sidebar-box h4 { margin: 0 0 10px 0; font-size: 13px; color: #333; }
-  .sidebar-box a { display: block; color: #0066cc; text-decoration: none; font-size: 12px; margin: 4px 0; }
-  .sidebar-box a:hover { text-decoration: underline; }
-  #footer { clear: both; text-align: center; padding: 20px; font-size: 11px; color: #999; }
-  #loading { text-align: center; padding: 40px; color: #666; }
-</style>
-</head>
-<body>
-<div id="header">
-  <div id="binglogo">Bing</div>
-  <div id="searchbar">
-    <form action="https://www.bing.com/search" method="get">
-      <input type="text" name="q" value=")HTML" + q + R"HTML(" placeholder="Search">
-      <input type="hidden" name="ensearch" value="1">
-      <button type="submit">Search</button>
-    </form>
-  </div>
-</div>
-<div id="main">
-  <div id="resultsinfo">About )HTML" + q + R"HTML( results</div>
-  <div id="loading">Loading results...</div>
-  <div id="results"></div>
-</div>
-<div id="sidebar">
-  <div class="sidebar-box">
-    <h4>Related Searches</h4>
-    <a href="https://www.bing.com/search?q=)HTML" + q + R"HTML(+review&ensearch=1">)HTML" + q + R"HTML( review</a>
-    <a href="https://www.bing.com/search?q=)HTML" + q + R"HTML(+news&ensearch=1">)HTML" + q + R"HTML( news</a>
-    <a href="https://www.bing.com/search?q=)HTML" + q + R"HTML(+images&ensearch=1">)HTML" + q + R"HTML( images</a>
-  </div>
-  <div class="sidebar-box">
-    <h4>Quick Links</h4>
-    <a href=")HTML" + bingUrl + R"HTML(">View on Bing</a>
-    <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(">Search on Google</a>
-  </div>
-</div>
-<div id="footer">Internet Explorer - Bing Search Results</div>
-<script>
-fetch(')HTML" + bingUrl + R"HTML(')
-  .then(r => r.text())
-  .then(html => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const results = doc.querySelectorAll('li.b_algo');
-    const container = document.getElementById('results');
-    const loading = document.getElementById('loading');
-    loading.style.display = 'none';
-    
-    if (results.length === 0) {
-      container.innerHTML = '<div class="result"><h3><a href=")HTML" + bingUrl + R"HTML(">No results found - click to view on Bing</a></h3></div>';
-      return;
-    }
-    
-    results.forEach((r, i) => {
-      if (i >= 10) return;
-      const h2 = r.querySelector('h2');
-      const a = h2 ? h2.querySelector('a') : null;
-      const cite = r.querySelector('.b_attribution cite, .b_caption cite');
-      const snippet = r.querySelector('.b_caption p, p');
-      
-      if (a) {
-        const div = document.createElement('div');
-        div.className = 'result';
-        div.innerHTML = `
-          <h3><a href="${a.href}" target="_blank">${a.textContent}</a></h3>
-          <div class="url">${cite ? cite.textContent : a.href}</div>
-          <div class="snippet">${snippet ? snippet.textContent : ''}</div>
-        `;
-        container.appendChild(div);
-      }
-    });
-  })
-  .catch(e => {
-    document.getElementById('loading').innerHTML = '<div class="result"><h3><a href=")HTML" + bingUrl + R"HTML(">Click here to view results on Bing</a></h3><div class="url">www.bing.com</div><div class="snippet">Could not load results automatically.</div></div>';
-  });
-</script>
-</body>
-</html>
-)HTML");
-}
 
-std::string BuildExciteStartPageHtml() {
-    return std::string(R"HTML(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Excite</title>
-<style>
-  body { margin: 0; padding: 0; background: #FFFFFF; font-family: Arial, Helvetica, sans-serif; }
-  .header { background: #FFCC00; padding: 10px; }
-  .header table { width: 100%; }
-  .logo { text-align: center; font-size: 24px; font-weight: bold; color: #000066; }
-  .nav { text-align: right; font-size: 12px; padding: 5px; }
-  .nav a { color: #000066; text-decoration: none; margin: 0 10px; }
-  .content { padding: 20px; }
-  .search-box { text-align: center; margin: 30px 0; }
-  .search-box input { width: 300px; padding: 5px; font-size: 14px; border: 1px solid #000; }
-  .search-box button { padding: 5px 15px; font-size: 14px; background: #FFCC00; border: 1px solid #000; cursor: pointer; }
-  .links { display: flex; justify-content: space-around; margin: 30px 0; flex-wrap: wrap; }
-  .link-group { text-align: center; margin: 10px; }
-  .link-group h3 { color: #000066; font-size: 14px; margin-bottom: 10px; }
-  .link-group a { display: block; color: #000066; text-decoration: none; font-size: 12px; margin: 5px 0; }
-  .news { background: #F0F0F0; padding: 15px; margin: 20px 0; border: 1px solid #CCC; }
-  .news h3 { color: #000066; font-size: 14px; margin-bottom: 10px; }
-  .news-item { font-size: 12px; margin: 5px 0; }
-  .footer { text-align: center; padding: 20px; font-size: 11px; color: #666; }
-</style>
-</head>
-<body>
-<div class="header">
-  <table>
-    <tr>
-      <td class="logo">Excite</td>
-      <td class="nav">
-        <a href="#">Login</a> |
-        <a href="#">Account Info</a> |
-        <a href="#">Member Directory</a> |
-        <a href="#">Help</a>
-      </td>
-    </tr>
-  </table>
-</div>
-<div class="content">
-  <div class="search-box">
-    <form action="https://www.google.com/search" method="get">
-      <input type="text" name="q" placeholder="Search Excite" autofocus>
-      <button type="submit">Search</button>
-    </form>
-  </div>
-  <div class="links">
-    <div class="link-group">
-      <h3>Personalize Your Page!</h3>
-      <a href="#">FREE Excite Mail Account</a>
-      <a href="#">Make Excite My Start Page</a>
-    </div>
-    <div class="link-group">
-      <h3>Services</h3>
-      <a href="#">Airline Tickets</a>
-      <a href="#">Auctions</a>
-      <a href="#">Chat</a>
-      <a href="#">Custom News</a>
-      <a href="#">Email Lookup</a>
-      <a href="#">Excite Cam</a>
-      <a href="#">Job Finder</a>
-      <a href="#">Maps & Directions</a>
-      <a href="#">People Finder</a>
-      <a href="#">Personals</a>
-      <a href="#">Start a Biz</a>
-      <a href="#">Share Photos</a>
-      <a href="#">Stock Quotes</a>
-      <a href="#">Weather</a>
-      <a href="#">Yellow Pages</a>
-      <a href="#">More...</a>
-    </div>
-    <div class="link-group">
-      <h3>Categories</h3>
-      <a href="#">Autos</a>
-      <a href="#">Careers</a>
-      <a href="#">City Guides</a>
-      <a href="#">Classifieds & Auctions</a>
-      <a href="#">Computers & Internet</a>
-      <a href="#">Education</a>
-      <a href="#">Entertainment</a>
-      <a href="#">Health</a>
-      <a href="#">Horoscopes</a>
-      <a href="#">Home & Real Estate</a>
-      <a href="#">Lifestyle</a>
-      <a href="#">Money & Investing</a>
-      <a href="#">News</a>
-      <a href="#">People & Chat</a>
-      <a href="#">Shopping</a>
-      <a href="#">Sports</a>
-      <a href="#">Travel</a>
-    </div>
-  </div>
-  <div class="news">
-    <h3>Today on Excite</h3>
-    <div class="news-item">• Win $5,000 Cash!</div>
-    <div class="news-item">• Top Restaurant Reviews</div>
-    <div class="news-item">• Excite Yellow Pages</div>
-    <div class="news-item">• Financial Fitness Quiz</div>
-  </div>
-</div>
-<div class="footer">Recreated Excite 1999 interface - Search powered by Google</div>
-</body>
-</html>
-)HTML");
-}
-
-std::string BuildInfoseekStartPageHtml() {
-    return std::string(R"HTML(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Infoseek</title>
-<style>
-  body { margin: 0; padding: 0; background: #FFFFFF; font-family: Arial, Helvetica, sans-serif; }
-  .header { background: #FFFF00; padding: 10px; border-bottom: 2px solid #000; }
-  .header table { width: 100%; }
-  .logo { text-align: center; font-size: 28px; font-weight: bold; color: #000; }
-  .nav { text-align: right; font-size: 12px; padding: 5px; }
-  .nav a { color: #000; text-decoration: none; margin: 0 10px; }
-  .content { padding: 20px; }
-  .search-box { text-align: center; margin: 30px 0; }
-  .search-box input { width: 300px; padding: 5px; font-size: 14px; border: 2px solid #000; }
-  .search-box button { padding: 5px 15px; font-size: 14px; background: #FFFF00; border: 2px solid #000; cursor: pointer; }
-  .links { display: flex; justify-content: space-around; margin: 30px 0; flex-wrap: wrap; }
-  .link-group { text-align: center; margin: 10px; }
-  .link-group h3 { color: #000; font-size: 14px; margin-bottom: 10px; font-weight: bold; }
-  .link-group a { display: block; color: #000; text-decoration: none; font-size: 12px; margin: 5px 0; }
-  .news { background: #FFFFCC; padding: 15px; margin: 20px 0; border: 1px solid #000; }
-  .news h3 { color: #000; font-size: 14px; margin-bottom: 10px; font-weight: bold; }
-  .news-item { font-size: 12px; margin: 5px 0; }
-  .footer { text-align: center; padding: 20px; font-size: 11px; color: #666; }
-</style>
-</head>
-<body>
-<div class="header">
-  <table>
-    <tr>
-      <td class="logo">Infoseek</td>
-      <td class="nav">
-        <a href="#">People Finder</a> |
-        <a href="#">Shareware</a> |
-        <a href="#">Company Capsules</a> |
-        <a href="#">More...</a>
-      </td>
-    </tr>
-  </table>
-</div>
-<div class="content">
-  <div class="search-box">
-    <form action="https://www.google.com/search" method="get">
-      <input type="text" name="q" placeholder="Search Infoseek" autofocus>
-      <button type="submit">Search</button>
-    </form>
-  </div>
-  <div class="links">
-    <div class="link-group">
-      <h3>Infoseek Today</h3>
-      <a href="#">House hunting?</a>
-      <a href="#">Catch a flick</a>
-      <a href="#">Weekend sports scores</a>
-      <a href="#">Quit your stupid job</a>
-    </div>
-    <div class="link-group">
-      <h3>Categories</h3>
-      <a href="#">Automotive</a>
-      <a href="#">Business</a>
-      <a href="#">Careers</a>
-      <a href="#">Communications</a>
-      <a href="#">Computer</a>
-      <a href="#">Education</a>
-      <a href="#">Entertainment</a>
-      <a href="#">The Good Life</a>
-      <a href="#">Health</a>
-      <a href="#">Internet</a>
-      <a href="#">Kids & Family</a>
-      <a href="#">News</a>
-      <a href="#">Personal Finance</a>
-      <a href="#">Real Estate</a>
-      <a href="#">Shopping</a>
-      <a href="#">Sports</a>
-      <a href="#">Travel</a>
-      <a href="#">Women's</a>
-    </div>
-    <div class="link-group">
-      <h3>Infoseek Tools</h3>
-      <a href="#">Extra Search Precision</a>
-      <a href="#">Web Sites</a>
-      <a href="#">News</a>
-      <a href="#">Companies</a>
-      <a href="#">Newsgroups</a>
-      <a href="#">Search Tips</a>
-      <a href="#">Advanced Search</a>
-    </div>
-  </div>
-  <div class="news">
-    <h3>News Headlines</h3>
-    <div class="news-item">• House Panel Approves Second Impeachment Article</div>
-    <div class="news-item">• U.S. House Panel Passes Three Impeachment Articles</div>
-    <div class="news-item">• Doctor: Chances Slim For Baseball Legend DiMaggio</div>
-    <div class="news-item">• Extra! Judiciary Committee approves second impeachment article</div>
-  </div>
-</div>
-<div class="footer">Recreated Infoseek 1998 interface - Search powered by Google</div>
-</body>
-</html>
-)HTML");
-}
-
-std::string BuildLycosStartPageHtml() {
-    return std::string(R"HTML(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Lycos</title>
-<style>
-  body { margin: 0; padding: 0; background: #FFFFFF; font-family: Arial, Helvetica, sans-serif; }
-  .header { background: #0066CC; padding: 15px; text-align: center; }
-  .logo { font-size: 32px; font-weight: bold; color: #FFFFFF; margin-bottom: 10px; }
-  .tagline { font-size: 14px; color: #FFFFFF; margin-bottom: 20px; }
-  .content { padding: 30px; text-align: center; }
-  .search-box { margin: 30px 0; }
-  .search-box input { width: 400px; padding: 8px; font-size: 16px; border: 2px solid #0066CC; }
-  .search-box button { padding: 8px 20px; font-size: 16px; background: #0066CC; color: #FFFFFF; border: none; cursor: pointer; }
-  .stats { background: #F0F8FF; padding: 20px; margin: 30px auto; max-width: 600px; border: 1px solid #0066CC; }
-  .stats h3 { color: #0066CC; font-size: 16px; margin-bottom: 10px; }
-  .stats p { font-size: 14px; color: #333; margin: 5px 0; }
-  .links { display: flex; justify-content: center; margin: 40px 0; flex-wrap: wrap; gap: 30px; }
-  .link-group { text-align: center; }
-  .link-group h3 { color: #0066CC; font-size: 16px; margin-bottom: 15px; }
-  .link-group a { display: block; color: #333; text-decoration: none; font-size: 14px; margin: 8px 0; }
-  .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
-</style>
-</head>
-<body>
-<div class="header">
-  <div class="logo">Lycos</div>
-  <div class="tagline">The Wolf Spider - Internet Search Engine</div>
-</div>
-<div class="content">
-  <div class="search-box">
-    <form action="https://www.google.com/search" method="get">
-      <input type="text" name="q" placeholder="Search the Web with Lycos" autofocus>
-      <button type="submit">Search</button>
-    </form>
-  </div>
-  <div class="stats">
-    <h3>Lycos Search Statistics</h3>
-    <p>• Over 54,000 documents indexed</p>
-    <p>• Probabilistic retrieval system</p>
-    <p>• Relevancy-ranked results</p>
-    <p>• Updated weekly by web crawler</p>
-  </div>
-  <div class="links">
-    <div class="link-group">
-      <h3>Search</h3>
-      <a href="#">Web Search</a>
-      <a href="#">Image Search</a>
-      <a href="#">News Search</a>
-      <a href="#">Advanced Search</a>
-    </div>
-    <div class="link-group">
-      <h3>Categories</h3>
-      <a href="#">Arts & Humanities</a>
-      <a href="#">Business & Finance</a>
-      <a href="#">Computers & Internet</a>
-      <a href="#">Education</a>
-      <a href="#">Entertainment</a>
-      <a href="#">Health</a>
-      <a href="#">News & Media</a>
-      <a href="#">Science</a>
-      <a href="#">Sports</a>
-      <a href="#">Travel</a>
-    </div>
-    <div class="link-group">
-      <h3>Lycos Services</h3>
-      <a href="#">Lycos Mail</a>
-      <a href="#">Lycos Chat</a>
-      <a href="#">Lycos Games</a>
-      <a href="#">Lycos Weather</a>
-      <a href="#">Lycos Maps</a>
-      <a href="#">Lycos Yellow Pages</a>
-    </div>
-  </div>
-</div>
-<div class="footer">Recreated Lycos 1994 interface - Search powered by Google</div>
-</body>
-</html>
-)HTML");
-}
-
-std::string BuildAltaVistaStartPageHtml() {
-    return std::string(R"HTML(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>AltaVista</title>
-<style>
-  body { margin: 0; padding: 0; background: #FFFFFF; font-family: Arial, Helvetica, sans-serif; }
-  .header { background: #000080; padding: 15px; text-align: center; }
-  .logo { font-size: 36px; font-weight: bold; color: #FFFFFF; margin-bottom: 5px; }
-  .tagline { font-size: 14px; color: #FFFFFF; margin-bottom: 15px; }
-  .nav { text-align: center; font-size: 12px; color: #FFFFFF; }
-  .nav a { color: #FFFFFF; text-decoration: none; margin: 0 15px; }
-  .content { padding: 30px; text-align: center; }
-  .search-box { margin: 30px 0; }
-  .search-box input { width: 400px; padding: 8px; font-size: 16px; border: 2px solid #000080; }
-  .search-box button { padding: 8px 20px; font-size: 16px; background: #000080; color: #FFFFFF; border: none; cursor: pointer; }
-  .stats { background: #F0F8FF; padding: 20px; margin: 30px auto; max-width: 600px; border: 1px solid #000080; }
-  .stats h3 { color: #000080; margin: 0 0 10px 0; }
-  .stats p { font-size: 14px; color: #333; margin: 5px 0; }
-  .link-group { text-align: center; margin: 20px; }
-  .link-group h3 { color: #000080; font-size: 14px; margin-bottom: 10px; }
-  .link-group a { display: block; color: #000080; text-decoration: none; font-size: 12px; margin: 5px 0; }
-  .footer { text-align: center; padding: 20px; font-size: 11px; color: #666; }
-</style>
-</head>
-<body>
-<div class="header">
-  <div class="logo">AltaVista</div>
-  <div class="tagline">The Most Powerful and Useful Guide to the Net</div>
-  <div class="nav">
-    <a href="#">Add URL</a> |
-    <a href="#">Services</a> |
-    <a href="#">Help</a> |
-    <a href="#">About AltaVista</a>
-  </div>
-</div>
-<div class="content">
-  <div class="search-box">
-    <form action="https://www.google.com/search" method="get">
-      <input type="text" name="q" placeholder="Search the Web with AltaVista" autofocus autocomplete="off">
-      <button type="submit">Search</button>
-    </form>
-  </div>
-  <div class="stats">
-    <h3>AltaVista Statistics</h3>
-    <p>30 million Web pages indexed</p>
-    <p>Over 14,000 news groups</p>
-    <p>Fast search response time</p>
-  </div>
-  <div class="link-group">
-    <h3>Popular Categories</h3>
-    <a href="#">Business</a>
-    <a href="#">Computers</a>
-    <a href="#">Entertainment</a>
-    <a href="#">Health</a>
-    <a href="#">News</a>
-    <a href="#">Sports</a>
-    <a href="#">Travel</a>
-  </div>
-  <div class="link-group">
-    <h3>AltaVista Services</h3>
-    <a href="#">AltaVista Shopping</a>
-    <a href="#">AltaVista Images</a>
-    <a href="#">AltaVista Audio</a>
-    <a href="#">AltaVista Video</a>
-    <a href="#">AltaVista News</a>
-  </div>
-</div>
-<div class="footer">Recreated AltaVista 1995 interface - Search powered by Google</div>
-</body>
-</html>
-)HTML");
-}
-
-std::string BuildExciteResultsPageHtml(const std::wstring& query) {
-    std::string q = HtmlEscape(NarrowToUtf8(query));
-    std::string googleUrl = "https://www.google.com/search?q=" + q;
-
-    return std::string(R"HTML(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Excite Search Results</title>
-<style>
-  body { margin: 0; padding: 0; background: #FFFFFF; font-family: Arial, Helvetica, sans-serif; }
-  .header { background: #FFCC00; padding: 10px; }
-  .header table { width: 100%; }
-  .logo { text-align: center; font-size: 24px; font-weight: bold; color: #000066; }
-  .search-bar { text-align: center; padding: 15px; background: #FFF8DC; }
-  .search-bar input { width: 300px; padding: 5px; font-size: 14px; border: 1px solid #000; }
-  .search-bar button { padding: 5px 15px; font-size: 14px; background: #FFCC00; border: 1px solid #000; cursor: pointer; }
-  .content { padding: 20px; }
-  .results-info { font-size: 12px; color: #666; margin-bottom: 15px; }
-  .result { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #DDD; }
-  .result h3 { margin: 0 0 5px 0; font-size: 16px; }
-  .result h3 a { color: #000066; text-decoration: none; }
-  .result h3 a:hover { text-decoration: underline; }
-  .result .url { font-size: 12px; color: #008000; margin-bottom: 5px; }
-  .result .snippet { font-size: 13px; color: #333; line-height: 1.4; }
-  .sidebar { float: right; width: 200px; margin-left: 20px; }
-  .sidebar-box { background: #F5F5F5; border: 1px solid #CCC; padding: 10px; margin-bottom: 15px; }
-  .sidebar-box h4 { margin: 0 0 8px 0; font-size: 13px; color: #000066; }
-  .sidebar-box a { display: block; color: #000066; text-decoration: none; font-size: 12px; margin: 3px 0; }
-  .footer { clear: both; text-align: center; padding: 20px; font-size: 11px; color: #666; }
-</style>
-</head>
-<body>
-<div class="header">
-  <table><tr><td class="logo">Excite</td></tr></table>
-</div>
-<div class="search-bar">
-  <form action="https://www.google.com/search" method="get">
-    <input type="text" name="q" value=")HTML" + q + R"HTML(" placeholder="Search Excite">
-    <button type="submit">Search</button>
-  </form>
-</div>
-<div class="content">
-  <div class="results-info">Search results for: )HTML" + q + R"HTML(</div>
-  <div class="sidebar">
-    <div class="sidebar-box">
-      <h4>Refine Search</h4>
-      <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(+images">Images</a>
-      <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(+news">News</a>
-      <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(+video">Video</a>
-    </div>
-    <div class="sidebar-box">
-      <h4>Search Tips</h4>
-      <p style="font-size: 11px; margin: 0;">Use + to require terms, - to exclude.</p>
-    </div>
-  </div>
-  <div id="results"><div style="text-align:center;padding:20px;color:#666;">Loading results...</div></div>
-</div>
-<div class="footer">Excite Search - Powered by Google</div>
-<script>
-fetch(')HTML" + googleUrl + R"HTML(')
-  .then(r => r.text())
-  .then(html => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const results = doc.querySelectorAll('div.g, div[data-sokoban-container]');
-    const container = document.getElementById('results');
-    
-    if (results.length === 0) {
-      container.innerHTML = '<div class="result"><h3><a href=")HTML" + googleUrl + R"HTML(">View results on Google</a></h3><div class="url">www.google.com</div><div class="snippet">Click here to see full results.</div></div>';
-      return;
-    }
-    
-    let count = 0;
-    results.forEach(r => {
-      if (count >= 10) return;
-      const a = r.querySelector('a');
-      const h3 = r.querySelector('h3');
-      const cite = r.querySelector('cite');
-      const snippet = r.querySelector('.VwiC3b, .IsZvec');
-      
-      if (a && h3) {
-        const div = document.createElement('div');
-        div.className = 'result';
-        div.innerHTML = `
-          <h3><a href="${a.href}" target="_blank">${h3.textContent}</a></h3>
-          <div class="url">${cite ? cite.textContent : a.href}</div>
-          <div class="snippet">${snippet ? snippet.textContent : ''}</div>
-        `;
-        container.appendChild(div);
-        count++;
-      }
-    });
-    
-    if (count === 0) {
-      container.innerHTML = '<div class="result"><h3><a href=")HTML" + googleUrl + R"HTML(">View results on Google</a></h3><div class="url">www.google.com</div><div class="snippet">Click here to see full results.</div></div>';
-    }
-  })
-  .catch(e => {
-    document.getElementById('results').innerHTML = '<div class="result"><h3><a href=")HTML" + googleUrl + R"HTML(">Click here to view results on Google</a></h3><div class="url">www.google.com</div><div class="snippet">Could not load results automatically.</div></div>';
-  });
-</script>
-</body>
-</html>
-)HTML");
-}
-
-std::string BuildInfoseekResultsPageHtml(const std::wstring& query) {
-    std::string q = HtmlEscape(NarrowToUtf8(query));
-    std::string googleUrl = "https://www.google.com/search?q=" + q;
-
-    return std::string(R"HTML(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Infoseek Search Results</title>
-<style>
-  body { margin: 0; padding: 0; background: #FFFFFF; font-family: Arial, Helvetica, sans-serif; }
-  .header { background: #FFFF00; padding: 10px; border-bottom: 2px solid #000; }
-  .header table { width: 100%; }
-  .logo { text-align: center; font-size: 28px; font-weight: bold; color: #000; }
-  .search-bar { text-align: center; padding: 15px; background: #FFFFCC; }
-  .search-bar input { width: 300px; padding: 5px; font-size: 14px; border: 2px solid #000; }
-  .search-bar button { padding: 5px 15px; font-size: 14px; background: #FFFF00; border: 2px solid #000; cursor: pointer; }
-  .content { padding: 20px; }
-  .results-info { font-size: 12px; color: #666; margin-bottom: 15px; font-weight: bold; }
-  .result { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #000; }
-  .result h3 { margin: 0 0 5px 0; font-size: 16px; font-weight: bold; }
-  .result h3 a { color: #000; text-decoration: none; }
-  .result h3 a:hover { text-decoration: underline; }
-  .result .url { font-size: 12px; color: #008000; margin-bottom: 5px; }
-  .result .snippet { font-size: 13px; color: #333; line-height: 1.4; }
-  .sidebar { float: right; width: 200px; margin-left: 20px; }
-  .sidebar-box { background: #FFFFCC; border: 1px solid #000; padding: 10px; margin-bottom: 15px; }
-  .sidebar-box h4 { margin: 0 0 8px 0; font-size: 13px; color: #000; font-weight: bold; }
-  .sidebar-box a { display: block; color: #000; text-decoration: none; font-size: 12px; margin: 3px 0; }
-  .footer { clear: both; text-align: center; padding: 20px; font-size: 11px; color: #666; }
-</style>
-</head>
-<body>
-<div class="header">
-  <table><tr><td class="logo">Infoseek</td></tr></table>
-</div>
-<div class="search-bar">
-  <form action="https://www.google.com/search" method="get">
-    <input type="text" name="q" value=")HTML" + q + R"HTML(" placeholder="Search Infoseek">
-    <button type="submit">Search</button>
-  </form>
-</div>
-<div class="content">
-  <div class="results-info">Search results for: )HTML" + q + R"HTML(</div>
-  <div class="sidebar">
-    <div class="sidebar-box">
-      <h4>Refine Search</h4>
-      <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(+images">Images</a>
-      <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(+news">News</a>
-      <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(+video">Video</a>
-    </div>
-  </div>
-  <div id="results"><div style="text-align:center;padding:20px;color:#666;">Loading results...</div></div>
-</div>
-<div class="footer">Infoseek Search - Powered by Google</div>
-<script>
-fetch(')HTML" + googleUrl + R"HTML(')
-  .then(r => r.text())
-  .then(html => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const results = doc.querySelectorAll('div.g, div[data-sokoban-container]');
-    const container = document.getElementById('results');
-    
-    if (results.length === 0) {
-      container.innerHTML = '<div class="result"><h3><a href=")HTML" + googleUrl + R"HTML(">View results on Google</a></h3><div class="url">www.google.com</div><div class="snippet">Click here to see full results.</div></div>';
-      return;
-    }
-    
-    let count = 0;
-    results.forEach(r => {
-      if (count >= 10) return;
-      const a = r.querySelector('a');
-      const h3 = r.querySelector('h3');
-      const cite = r.querySelector('cite');
-      const snippet = r.querySelector('.VwiC3b, .IsZvec');
-      
-      if (a && h3) {
-        const div = document.createElement('div');
-        div.className = 'result';
-        div.innerHTML = `
-          <h3><a href="${a.href}" target="_blank">${h3.textContent}</a></h3>
-          <div class="url">${cite ? cite.textContent : a.href}</div>
-          <div class="snippet">${snippet ? snippet.textContent : ''}</div>
-        `;
-        container.appendChild(div);
-        count++;
-      }
-    });
-    
-    if (count === 0) {
-      container.innerHTML = '<div class="result"><h3><a href=")HTML" + googleUrl + R"HTML(">View results on Google</a></h3><div class="url">www.google.com</div><div class="snippet">Click here to see full results.</div></div>';
-    }
-  })
-  .catch(e => {
-    document.getElementById('results').innerHTML = '<div class="result"><h3><a href=")HTML" + googleUrl + R"HTML(">Click here to view results on Google</a></h3><div class="url">www.google.com</div><div class="snippet">Could not load results automatically.</div></div>';
-  });
-</script>
-</body>
-</html>
-)HTML");
-}
-
-std::string BuildLycosResultsPageHtml(const std::wstring& query) {
-    std::string q = HtmlEscape(NarrowToUtf8(query));
-    std::string googleUrl = "https://www.google.com/search?q=" + q;
-
-    return std::string(R"HTML(<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Lycos Search Results</title>
-<style>
-  body { margin: 0; padding: 0; background: #FFFFFF; font-family: Arial, Helvetica, sans-serif; }
-  .header { background: #0066CC; padding: 15px; text-align: center; }
-  .logo { font-size: 32px; font-weight: bold; color: #FFFFFF; margin-bottom: 10px; }
-  .tagline { font-size: 14px; color: #FFFFFF; margin-bottom: 20px; }
-  .search-bar { text-align: center; padding: 20px; background: #F0F8FF; }
-  .search-bar input { width: 400px; padding: 8px; font-size: 16px; border: 2px solid #0066CC; }
-  .search-bar button { padding: 8px 20px; font-size: 16px; background: #0066CC; color: #FFFFFF; border: none; cursor: pointer; }
-  .content { padding: 30px; }
-  .results-info { font-size: 14px; color: #333; margin-bottom: 20px; text-align: center; }
-  .result { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #0066CC; }
-  .result h3 { margin: 0 0 8px 0; font-size: 18px; }
-  .result h3 a { color: #0066CC; text-decoration: none; }
-  .result h3 a:hover { text-decoration: underline; }
-  .result .url { font-size: 13px; color: #008000; margin-bottom: 8px; }
-  .result .snippet { font-size: 14px; color: #333; line-height: 1.5; }
-  .sidebar { float: right; width: 250px; margin-left: 30px; }
-  .sidebar-box { background: #F0F8FF; border: 1px solid #0066CC; padding: 15px; margin-bottom: 20px; }
-  .sidebar-box h4 { margin: 0 0 10px 0; font-size: 14px; color: #0066CC; }
-  .sidebar-box a { display: block; color: #0066CC; text-decoration: none; font-size: 13px; margin: 5px 0; }
-  .footer { clear: both; text-align: center; padding: 20px; font-size: 12px; color: #666; }
-</style>
-</head>
-<body>
-<div class="header">
-  <div class="logo">Lycos</div>
-  <div class="tagline">The Wolf Spider - Internet Search Engine</div>
-</div>
-<div class="search-bar">
-  <form action="https://www.google.com/search" method="get">
-    <input type="text" name="q" value=")HTML" + q + R"HTML(" placeholder="Search the Web with Lycos">
-    <button type="submit">Search</button>
-  </form>
-</div>
-<div class="content">
-  <div class="results-info">Search results for: )HTML" + q + R"HTML(</div>
-  <div class="sidebar">
-    <div class="sidebar-box">
-      <h4>Refine Search</h4>
-      <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(+images">Images</a>
-      <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(+news">News</a>
-      <a href="https://www.google.com/search?q=)HTML" + q + R"HTML(+video">Video</a>
-    </div>
-  </div>
-  <div id="results"><div style="text-align:center;padding:20px;color:#666;">Loading results...</div></div>
-</div>
-<div class="footer">Lycos Search - Powered by Google</div>
-<script>
-fetch(')HTML" + googleUrl + R"HTML(')
-  .then(r => r.text())
-  .then(html => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const results = doc.querySelectorAll('div.g, div[data-sokoban-container]');
-    const container = document.getElementById('results');
-    
-    if (results.length === 0) {
-      container.innerHTML = '<div class="result"><h3><a href=")HTML" + googleUrl + R"HTML(">View results on Google</a></h3><div class="url">www.google.com</div><div class="snippet">Click here to see full results.</div></div>';
-      return;
-    }
-    
-    let count = 0;
-    results.forEach(r => {
-      if (count >= 10) return;
-      const a = r.querySelector('a');
-      const h3 = r.querySelector('h3');
-      const cite = r.querySelector('cite');
-      const snippet = r.querySelector('.VwiC3b, .IsZvec');
-      
-      if (a && h3) {
-        const div = document.createElement('div');
-        div.className = 'result';
-        div.innerHTML = `
-          <h3><a href="${a.href}" target="_blank">${h3.textContent}</a></h3>
-          <div class="url">${cite ? cite.textContent : a.href}</div>
-          <div class="snippet">${snippet ? snippet.textContent : ''}</div>
-        `;
-        container.appendChild(div);
-        count++;
-      }
-    });
-    
-    if (count === 0) {
-      container.innerHTML = '<div class="result"><h3><a href=")HTML" + googleUrl + R"HTML(">View results on Google</a></h3><div class="url">www.google.com</div><div class="snippet">Click here to see full results.</div></div>';
-    }
-  })
-  .catch(e => {
-    document.getElementById('results').innerHTML = '<div class="result"><h3><a href=")HTML" + googleUrl + R"HTML(">Click here to view results on Google</a></h3><div class="url">www.google.com</div><div class="snippet">Could not load results automatically.</div></div>';
-  });
-</script>
-</body>
-</html>
-)HTML");
-}
-
-HICON IeIcon() {
-    static HICON icon = [] {
-        constexpr int size = 32;
-        BITMAPINFO bmi{};
-        bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-        bmi.bmiHeader.biWidth = size;
-        bmi.bmiHeader.biHeight = -size;
-        bmi.bmiHeader.biPlanes = 1;
-        bmi.bmiHeader.biBitCount = 32;
-        bmi.bmiHeader.biCompression = BI_RGB;
-
-        HDC screen = GetDC(nullptr);
-        HDC mem = CreateCompatibleDC(screen);
-        void* bits = nullptr;
-        HBITMAP color = CreateDIBSection(mem, &bmi, DIB_RGB_COLORS, &bits, nullptr, 0);
-        if (bits) {
-            std::fill_n(static_cast<BYTE*>(bits), size * size * 4, static_cast<BYTE>(0));
-        }
-        HGDIOBJ oldBmp = SelectObject(mem, color);
-        SetBkMode(mem, TRANSPARENT);
-
-        HPEN orbitPen = CreatePen(PS_SOLID, 3, RGB(255, 150, 0));
-        SelectObject(mem, orbitPen);
-        SelectObject(mem, GetStockObject(NULL_BRUSH));
-        Ellipse(mem, 2, 8, 30, 26);
-
-        HBRUSH sphere = CreateSolidBrush(RGB(10, 100, 200));
-        SelectObject(mem, sphere);
-        Ellipse(mem, 8, 5, 24, 21);
-
-        HFONT font = CreateFontW(-18, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
-                                 OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
-                                 DEFAULT_PITCH | FF_SWISS, L"Segoe UI");
-        HGDIOBJ oldFont = SelectObject(mem, font);
-        SetTextColor(mem, RGB(255, 255, 255));
-        RECT textRect{8, 3, 24, 21};
-        DrawTextW(mem, L"e", -1, &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-
-        SelectObject(mem, oldFont);
-        SelectObject(mem, oldBmp);
-        DeleteObject(font);
-        DeleteObject(sphere);
-        DeleteObject(orbitPen);
-
-        std::vector<BYTE> maskData(static_cast<size_t>(size) * 4, static_cast<BYTE>(0xFF));
-        if (bits) {
-            const BYTE* px = static_cast<const BYTE*>(bits);
-            for (int y = 0; y < size; ++y) {
-                for (int x = 0; x < size; ++x) {
-                    if (px[(static_cast<size_t>(y) * size + x) * 4 + 3] > 0) {
-                        maskData[static_cast<size_t>(y) * 4 + x / 8] &=
-                            static_cast<BYTE>(~(0x80 >> (x % 8)));
-                    }
-                }
-            }
-        }
-        HBITMAP mask = CreateBitmap(size, size, 1, 1, maskData.data());
-
-        ICONINFO info{};
-        info.fIcon = TRUE;
-        info.hbmMask = mask;
-        info.hbmColor = color;
-        HICON result = CreateIconIndirect(&info);
-
-        if (mask) DeleteObject(mask);
-        if (color) DeleteObject(color);
-        DeleteDC(mem);
-        ReleaseDC(nullptr, screen);
-        return result ? result : LoadIconW(nullptr, IDI_APPLICATION);
-    }();
-    return icon;
-}
 
 const SearchEngineDef& SearchEngineDefFor(SearchEngine engine) {
     int index = static_cast<int>(engine);
@@ -1437,12 +508,8 @@ public:
         std::wstring root = std::wstring(localAppData) + L"\\CustomBrowser";
         std::wstring settings = root + L"\\settings.txt";
         std::wstring webView2 = root + L"\\WebView2";
-        std::wstring ieStart = root + L"\\ie_start.html";
-        std::wstring ieResults = root + L"\\ie_results.html";
 
         DeleteFileW(settings.c_str());
-        DeleteFileW(ieStart.c_str());
-        DeleteFileW(ieResults.c_str());
 
         SHFILEOPSTRUCTW fileOp{};
         fileOp.wFunc = FO_DELETE;
@@ -1735,35 +802,11 @@ private:
             return;
         }
 
-        std::wstring target = url;
-        if (IsIeMode() && url.find(L"bing.com/search") != std::wstring::npos) {
-            size_t qpos = url.find(L"q=");
-            if (qpos != std::wstring::npos) {
-                qpos += 2;
-                size_t end = url.find(L"&", qpos);
-                std::wstring query = url.substr(qpos, end == std::wstring::npos ? std::wstring::npos : end - qpos);
-                for (size_t i = 0; i < query.size(); ++i) {
-                    if (query[i] == L'+') query[i] = L' ';
-                    else if (query[i] == L'%') {
-                        if (i + 2 < query.size()) {
-                            int hi = query[i+1], lo = query[i+2];
-                            int val = (hi <= '9' ? hi - '0' : hi <= 'F' ? hi - 'A' + 10 : hi - 'a' + 10) * 16 +
-                                      (lo <= '9' ? lo - '0' : lo <= 'F' ? lo - 'A' + 10 : lo - 'a' + 10);
-                            query[i] = static_cast<wchar_t>(val);
-                            query.erase(i+1, 2);
-                        }
-                    }
-                }
-                EnsureIeResultsPage(query);
-                target = IeResultsPageUrl();
-            }
-        }
-
-        tab->url = target;
+        tab->url = url;
         if (tab->webView) {
-            tab->webView->Navigate(target.c_str());
+            tab->webView->Navigate(url.c_str());
         } else {
-            tab->pendingUrl = target;
+            tab->pendingUrl = url;
         }
         UpdateUI();
     }
@@ -1833,27 +876,15 @@ private:
         const int h = 32;
 
         int addressX = 380;
-        if (IsIeMode()) {
-            MoveWindow(hwndBack_, 8, y, 62, h, TRUE);
-            MoveWindow(hwndForward_, 74, y, 68, h, TRUE);
-            MoveWindow(hwndReload_, 146, y, 70, h, TRUE);
-            MoveWindow(hwndHome_, 220, y, 56, h, TRUE);
-            MoveWindow(hwndNewTab_, 280, y, 40, h, TRUE);
-            MoveWindow(hwndSearchEngine_, 326, y, 110, h, TRUE);
-            MoveWindow(hwndSettings_, 442, y, 75, h, TRUE);
-            MoveWindow(hwndTime_, 523, y, 120, h, TRUE);
-            addressX = 649;
-        } else {
-            MoveWindow(hwndBack_, 8, y, 34, h, TRUE);
-            MoveWindow(hwndForward_, 46, y, 34, h, TRUE);
-            MoveWindow(hwndReload_, 84, y, 34, h, TRUE);
-            MoveWindow(hwndHome_, 122, y, 40, h, TRUE);
-            MoveWindow(hwndNewTab_, 166, y, 58, h, TRUE);
-            MoveWindow(hwndSearchEngine_, 232, y, 185, h, TRUE);
-            MoveWindow(hwndSettings_, 421, y, 75, h, TRUE);
-            MoveWindow(hwndTime_, 502, y, 120, h, TRUE);
-            addressX = 628;
-        }
+        MoveWindow(hwndBack_, 8, y, 34, h, TRUE);
+        MoveWindow(hwndForward_, 46, y, 34, h, TRUE);
+        MoveWindow(hwndReload_, 84, y, 34, h, TRUE);
+        MoveWindow(hwndHome_, 122, y, 40, h, TRUE);
+        MoveWindow(hwndNewTab_, 166, y, 58, h, TRUE);
+        MoveWindow(hwndSearchEngine_, 232, y, 185, h, TRUE);
+        MoveWindow(hwndSettings_, 421, y, 75, h, TRUE);
+        MoveWindow(hwndTime_, 502, y, 120, h, TRUE);
+        addressX = 628;
 
         const int goX = std::max(addressX + 120, width - 84);
         const int addressWidth = std::max(80, goX - addressX - 8);
@@ -1949,18 +980,12 @@ private:
         ComputeTabRects(rects);
         SetBkMode(hdc, TRANSPARENT);
 
-        const bool ie = IsIeMode();
-        HBRUSH ieActiveBrush = ie ? CreateSolidBrush(RGB(255, 255, 255)) : nullptr;
-        HBRUSH ieInactiveBrush = ie ? CreateSolidBrush(RGB(238, 238, 238)) : nullptr;
-        const COLORREF ieBorder = RGB(172, 172, 172);
-
         for (size_t i = 0; i < rects.size(); ++i) {
             const bool active = i == activeTab_;
-            HBRUSH brush = ie ? (active ? ieActiveBrush : ieInactiveBrush)
-                              : GetSysColorBrush(active ? COLOR_WINDOW : COLOR_BTNFACE);
+            HBRUSH brush = GetSysColorBrush(active ? COLOR_WINDOW : COLOR_BTNFACE);
             FillRect(hdc, &rects[i], brush);
 
-            const COLORREF borderColor = ie ? ieBorder : GetSysColor(active ? COLOR_WINDOWTEXT : COLOR_BTNSHADOW);
+            const COLORREF borderColor = GetSysColor(active ? COLOR_WINDOWTEXT : COLOR_BTNSHADOW);
             HPEN pen = CreatePen(PS_SOLID, 1, borderColor);
             HGDIOBJ oldPen = SelectObject(hdc, pen);
             HGDIOBJ oldBrush = SelectObject(hdc, GetStockObject(NULL_BRUSH));
@@ -1976,14 +1001,10 @@ private:
             DrawTextW(hdc, title.c_str(), -1, &textRect, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
 
             RECT closeRect{rects[i].right - 22, rects[i].top + 9, rects[i].right - 6, rects[i].top + 25};
-            HBRUSH closeBrush = ie ? (active ? ieActiveBrush : ieInactiveBrush)
-                                   : GetSysColorBrush(active ? COLOR_WINDOW : COLOR_BTNFACE);
+            HBRUSH closeBrush = GetSysColorBrush(active ? COLOR_WINDOW : COLOR_BTNFACE);
             FillRect(hdc, &closeRect, closeBrush);
             DrawTextW(hdc, L"x", -1, &closeRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
         }
-
-        if (ieActiveBrush) DeleteObject(ieActiveBrush);
-        if (ieInactiveBrush) DeleteObject(ieInactiveBrush);
     }
 
     std::wstring GetEditText(HWND edit) {
@@ -2045,40 +1066,6 @@ private:
                 base += L'/';
             }
             return base + L"search?q=" + encoded;
-        }
-        if (IsIeMode()) {
-            std::wstring decoded;
-            for (size_t i = 0; i < encoded.size(); ++i) {
-                if (encoded[i] == '%' && i + 2 < encoded.size()) {
-                    int hi = encoded[i+1], lo = encoded[i+2];
-                    int val = (hi <= '9' ? hi - '0' : hi <= 'F' ? hi - 'A' + 10 : hi - 'a' + 10) * 16 +
-                              (lo <= '9' ? lo - '0' : lo <= 'F' ? lo - 'A' + 10 : lo - 'a' + 10);
-                    decoded += static_cast<wchar_t>(val);
-                    i += 2;
-                } else {
-                    decoded += static_cast<wchar_t>(encoded[i]);
-                }
-            }
-            EnsureIeResultsPage(decoded);
-            return IeResultsPageUrl();
-        }
-        if (searchEngine_ == SearchEngine::Excite ||
-            searchEngine_ == SearchEngine::Infoseek ||
-            searchEngine_ == SearchEngine::Lycos) {
-            std::wstring decoded;
-            for (size_t i = 0; i < encoded.size(); ++i) {
-                if (encoded[i] == '%' && i + 2 < encoded.size()) {
-                    int hi = encoded[i+1], lo = encoded[i+2];
-                    int val = (hi <= '9' ? hi - '0' : hi <= 'F' ? hi - 'A' + 10 : hi - 'a' + 10) * 16 +
-                              (lo <= '9' ? lo - '0' : lo <= 'F' ? lo - 'A' + 10 : lo - 'a' + 10);
-                    decoded += static_cast<wchar_t>(val);
-                    i += 2;
-                } else {
-                    decoded += static_cast<wchar_t>(encoded[i]);
-                }
-            }
-            EnsureEngineResultsPage(searchEngine_, decoded);
-            return EngineResultsPageUrl(searchEngine_);
         }
         const SearchEngineDef& def = SearchEngineDefFor(searchEngine_);
         if (def.searchUrlPrefix == nullptr) {
@@ -2186,151 +1173,15 @@ private:
         }
     }
 
-    bool IsIeMode() const {
-        return searchEngine_ == SearchEngine::InternetExplorer;
-    }
-
-    std::wstring IeStartPagePath() const {
-        std::wstring settings = GetSettingsPath();
-        const size_t slash = settings.find_last_of(L"\\");
-        const std::wstring dir = slash == std::wstring::npos ? L"." : settings.substr(0, slash);
-        return dir + L"\\ie_start.html";
-    }
-
-    std::wstring IeStartPageUrl() const {
-        std::wstring path = IeStartPagePath();
-        std::replace(path.begin(), path.end(), L'\\', L'/');
-        return L"file:///" + path;
-    }
-
-    std::wstring IeResultsPagePath() const {
-        std::wstring settings = GetSettingsPath();
-        const size_t slash = settings.find_last_of(L"\\");
-        const std::wstring dir = slash == std::wstring::npos ? L"." : settings.substr(0, slash);
-        return dir + L"\\ie_results.html";
-    }
-
-    std::wstring IeResultsPageUrl() const {
-        std::wstring path = IeResultsPagePath();
-        std::replace(path.begin(), path.end(), L'\\', L'/');
-        return L"file:///" + path;
-    }
-
-    std::wstring EngineResultsPagePath(SearchEngine engine) const {
-        std::wstring settings = GetSettingsPath();
-        const size_t slash = settings.find_last_of(L"\\");
-        const std::wstring dir = slash == std::wstring::npos ? L"." : settings.substr(0, slash);
-        std::wstring name;
-        if (engine == SearchEngine::Excite) name = L"excite_results.html";
-        else if (engine == SearchEngine::Infoseek) name = L"infoseek_results.html";
-        else if (engine == SearchEngine::Lycos) name = L"lycos_results.html";
-        else name = L"results.html";
-        return dir + L"\\" + name;
-    }
-
-    std::wstring EngineResultsPageUrl(SearchEngine engine) const {
-        std::wstring path = EngineResultsPagePath(engine);
-        std::replace(path.begin(), path.end(), L'\\', L'/');
-        return L"file:///" + path;
-    }
-
-    void EnsureEngineResultsPage(SearchEngine engine, const std::wstring& query) {
-        const std::wstring path = EngineResultsPagePath(engine);
-        const size_t slash = path.find_last_of(L"\\");
-        if (slash != std::wstring::npos) {
-            CreateDirectoryW(path.substr(0, slash).c_str(), nullptr);
-        }
-        std::ofstream file{std::filesystem::path(path), std::ios::out | std::ios::trunc | std::ios::binary};
-        if (file) {
-            if (engine == SearchEngine::Excite) file << BuildExciteResultsPageHtml(query);
-            else if (engine == SearchEngine::Infoseek) file << BuildInfoseekResultsPageHtml(query);
-            else if (engine == SearchEngine::Lycos) file << BuildLycosResultsPageHtml(query);
-        }
-    }
-
-    void EnsureIeStartPage() {
-        const std::wstring path = IeStartPagePath();
-        const size_t slash = path.find_last_of(L"\\");
-        if (slash != std::wstring::npos) {
-            CreateDirectoryW(path.substr(0, slash).c_str(), nullptr);
-        }
-        std::ofstream file{std::filesystem::path(path), std::ios::out | std::ios::trunc | std::ios::binary};
-        if (file) {
-            file << BuildIeStartPageHtml();
-        }
-    }
-
-    std::wstring EngineStartPagePath(SearchEngine engine) const {
-        std::wstring settings = GetSettingsPath();
-        const size_t slash = settings.find_last_of(L"\\");
-        const std::wstring dir = slash == std::wstring::npos ? L"." : settings.substr(0, slash);
-        std::wstring name;
-        if (engine == SearchEngine::Excite) name = L"excite_start.html";
-        else if (engine == SearchEngine::Infoseek) name = L"infoseek_start.html";
-        else if (engine == SearchEngine::Lycos) name = L"lycos_start.html";
-        else if (engine == SearchEngine::AltaVista) name = L"altavista_start.html";
-        else name = L"start.html";
-        return dir + L"\\" + name;
-    }
-
-    std::wstring EngineStartPageUrl(SearchEngine engine) const {
-        std::wstring path = EngineStartPagePath(engine);
-        std::replace(path.begin(), path.end(), L'\\', L'/');
-        return L"file:///" + path;
-    }
-
-    void EnsureEngineStartPage(SearchEngine engine) {
-        const std::wstring path = EngineStartPagePath(engine);
-        const size_t slash = path.find_last_of(L"\\");
-        if (slash != std::wstring::npos) {
-            CreateDirectoryW(path.substr(0, slash).c_str(), nullptr);
-        }
-        std::ofstream file{std::filesystem::path(path), std::ios::out | std::ios::trunc | std::ios::binary};
-        if (file) {
-            if (engine == SearchEngine::Excite) file << BuildExciteStartPageHtml();
-            else if (engine == SearchEngine::Infoseek) file << BuildInfoseekStartPageHtml();
-            else if (engine == SearchEngine::Lycos) file << BuildLycosStartPageHtml();
-            else if (engine == SearchEngine::AltaVista) file << BuildAltaVistaStartPageHtml();
-        }
-    }
-
-    void EnsureIeResultsPage(const std::wstring& query) {
-        const std::wstring path = IeResultsPagePath();
-        const size_t slash = path.find_last_of(L"\\");
-        if (slash != std::wstring::npos) {
-            CreateDirectoryW(path.substr(0, slash).c_str(), nullptr);
-        }
-        std::ofstream file{std::filesystem::path(path), std::ios::out | std::ios::trunc | std::ios::binary};
-        if (file) {
-            file << BuildIeResultsPageHtml(query);
-        }
-    }
-
     void ApplySearchEngine() {
         const SearchEngineDef& def = SearchEngineDefFor(searchEngine_);
         if (searchEngine_ == SearchEngine::Searxng) {
             homeUrl_ = searxngUrl_.empty() ? L"https://searx.be" : searxngUrl_;
-        } else if (IsIeMode()) {
-            EnsureIeStartPage();
-            homeUrl_ = IeStartPageUrl();
-        } else if (searchEngine_ == SearchEngine::Excite ||
-                   searchEngine_ == SearchEngine::Infoseek ||
-                   searchEngine_ == SearchEngine::Lycos ||
-                   searchEngine_ == SearchEngine::AltaVista) {
-            EnsureEngineStartPage(searchEngine_);
-            homeUrl_ = EngineStartPageUrl(searchEngine_);
         } else if (def.homeUrl) {
             homeUrl_ = std::wstring(def.homeUrl);
         } else {
             homeUrl_ = L"https://www.bing.com";
         }
-        ApplyChromeLabels();
-        UpdateSearchEngineButton();
-    }
-
-    void ApplyIeMode() {
-        EnsureIeStartPage();
-        homeUrl_ = IeStartPageUrl();
         ApplyChromeLabels();
         UpdateSearchEngineButton();
     }
@@ -2361,13 +1212,8 @@ private:
             case SearchEngine::AOL: primaryColor = RGB(0, 102, 204); letter = L'A'; break;
             case SearchEngine::InternetArchive: primaryColor = RGB(100, 100, 100); letter = L'I'; break;
             case SearchEngine::Searxng: primaryColor = RGB(128, 0, 128); letter = L'S'; break;
-            case SearchEngine::InternetExplorer: primaryColor = RGB(0, 114, 198); letter = L'e'; break;
-            case SearchEngine::Excite: primaryColor = RGB(255, 204, 0); letter = L'E'; break;
-            case SearchEngine::Infoseek: primaryColor = RGB(255, 255, 0); letter = L'I'; break;
             case SearchEngine::WebCrawler: primaryColor = RGB(0, 102, 204); letter = L'W'; break;
-            case SearchEngine::Lycos: primaryColor = RGB(0, 102, 204); letter = L'L'; break;
             case SearchEngine::Dogpile: primaryColor = RGB(255, 102, 0); letter = L'D'; break;
-            case SearchEngine::AltaVista: primaryColor = RGB(0, 0, 128); letter = L'A'; break;
             case SearchEngine::Mojeek: primaryColor = RGB(0, 153, 0); letter = L'M'; break;
             case SearchEngine::StartPage: primaryColor = RGB(255, 140, 0); letter = L'S'; break;
             case SearchEngine::WolframAlpha: primaryColor = RGB(220, 20, 60); letter = L'W'; break;
@@ -2419,13 +1265,8 @@ private:
             case SearchEngine::AOL: iconPath += L"aol.ico"; break;
             case SearchEngine::InternetArchive: iconPath += L"internetarchive.ico"; break;
             case SearchEngine::Searxng: iconPath += L"searxng.ico"; break;
-            case SearchEngine::InternetExplorer: iconPath += L"internetexplorer.ico"; break;
-            case SearchEngine::Excite: iconPath += L"excite.ico"; break;
-            case SearchEngine::Infoseek: iconPath += L"infoseek.ico"; break;
             case SearchEngine::WebCrawler: iconPath += L"webcrawler.ico"; break;
-            case SearchEngine::Lycos: iconPath += L"lycos.ico"; break;
             case SearchEngine::Dogpile: iconPath += L"dogpile.ico"; break;
-            case SearchEngine::AltaVista: iconPath += L"altavista.ico"; break;
             case SearchEngine::Mojeek: iconPath += L"mojeek.ico"; break;
             case SearchEngine::StartPage: iconPath += L"startpage.ico"; break;
             case SearchEngine::WolframAlpha: iconPath += L"wolframalpha.ico"; break;
@@ -2444,11 +1285,10 @@ private:
     }
 
     void ApplyChromeLabels() {
-        const bool ie = IsIeMode();
-        if (hwndBack_) SetWindowTextW(hwndBack_, ie ? L"Back" : L"<");
-        if (hwndForward_) SetWindowTextW(hwndForward_, ie ? L"Forward" : L">");
-        if (hwndReload_) SetWindowTextW(hwndReload_, ie ? L"Refresh" : L"R");
-        if (hwndHome_) SetWindowTextW(hwndHome_, ie ? L"Home" : L"H");
+        if (hwndBack_) SetWindowTextW(hwndBack_, L"<");
+        if (hwndForward_) SetWindowTextW(hwndForward_, L">");
+        if (hwndReload_) SetWindowTextW(hwndReload_, L"R");
+        if (hwndHome_) SetWindowTextW(hwndHome_, L"H");
         if (hwnd_) {
             HICON icon = CreateSearchEngineIcon(searchEngine_);
             SendMessageW(hwnd_, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(icon));
@@ -2501,7 +1341,7 @@ private:
         }
         Tab* tab = ActiveTab();
         std::wstring title = tab && !tab->title.empty() ? tab->title : L"New Tab";
-        SetWindowTextW(hwnd_, (title + (IsIeMode() ? L" - Internet Explorer" : L" - Custom Browser")).c_str());
+        SetWindowTextW(hwnd_, (title + L" - Custom Browser").c_str());
     }
 
     void SetSearchEngine(SearchEngine engine) {
@@ -2515,11 +1355,7 @@ private:
             return;
         }
         std::wstring text = L"Search: ";
-        if (IsIeMode()) {
-            text += L"Google";
-        } else {
-            text += SearchEngineDisplayName(searchEngine_);
-        }
+        text += SearchEngineDisplayName(searchEngine_);
         SetWindowTextW(hwndSearchEngine_, text.c_str());
     }
 

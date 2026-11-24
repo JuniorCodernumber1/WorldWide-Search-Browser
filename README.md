@@ -9,9 +9,7 @@ This is a desktop browser application, not a from-scratch HTML rendering engine.
 - Multiple tabs with a custom tab strip
 - Back, forward, reload, home, new tab, and go controls
 - Address bar with URL normalization and search fallback
-- Search engine selector: Google, Bing, DuckDuckGo, Yahoo, Yandex, Ecosia, AOL, Internet Archive, SearXNG, Internet Explorer, Excite (1995), Infoseek (1994), Web Crawler (1994), Lycos (1994), Dogpile, AltaVista (1995), Mojeek, StartPage, WolframAlpha, MetaGer, Swisscows, Qwant, Seznam
-- Classic 1990s search engines: Excite, Infoseek, and Lycos run locally with recreated 1990s interfaces and working search (powered by Google). Web Crawler links to the current webcrawler.com (now a metasearch engine). Start pages are generated dynamically in `%LOCALAPPDATA%\CustomBrowser\`.
-- Internet Explorer option activates a standalone IE9-style UI recreation: simple IE9-era start page (logo, Favorites/Tools/Safety bar, era links, search bar), IE window title, IE toolbar labels/layout, and IE-style icon. Searches go directly to Bing. The start page is written to `%LOCALAPPDATA%\CustomBrowser\ie_start.html`.
+- Search engine selector: Google, Bing, DuckDuckGo, Yahoo, Yandex, Ecosia, AOL, Internet Archive, SearXNG, Web Crawler, Dogpile, Mojeek, StartPage, WolframAlpha, MetaGer, Swisscows, Qwant, Seznam
 - Settings dropdown menu with theme (light/dark mode), timezone selection, Clear Data, and Clear History options
 - Time display in toolbar showing current time in selected timezone (12 timezone options available)
 - Per-tab navigation history state
