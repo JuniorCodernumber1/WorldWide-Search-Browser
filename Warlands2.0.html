@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>WARLANDS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,300;0,600;1,300&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--gold:#f0b930;--gd:#c8920a;--ink:#0d0700;--bg:#08060a;--panel:#100a00;--border:#2a1a00;--parch:#e8d5a3;--dim:#6a4a1a;--red:#cc1111;--rd:#8b0000;--grn:#22aa44}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--parch);font-family:'Crimson Pro',serif;touch-action:none;user-select:none}
+#app{display:flex;flex-direction:column;height:100dvh}
+header{background:#0d0800;border-bottom:2px solid var(--gd);padding:0 8px;height:44px;display:flex;align-items:center;gap:6px;flex-shrink:0;z-index:20}
+.logo{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(.8rem,3vw,1.2rem);letter-spacing:.2em;color:var(--gold);white-space:nowrap}
+.logo em{color:var(--red);font-style:normal}
+.hrow{display:flex;gap:4px;align-items:center;margin-left:auto;flex-wrap:nowrap}
+.hbtn{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.05em;padding:3px 7px;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;border-radius:3px;white-space:nowrap;transition:all .12s}
+.hbtn.active{background:var(--gd);color:var(--ink);border-color:var(--gold)}
+.hbtn.go{border-color:#224400;color:var(--grn)}
+.hbtn.go.active{background:var(--grn);color:#fff;border-color:#44ff44}
+.sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.spdr{display:flex;gap:3px;align-items:center}
+.spd{font-family:'Cinzel',serif;font-size:.5rem;padding:3px 5px;border:1px solid var(--border);background:#1a1000;color:var(--dim);cursor:pointer;border-radius:2px}
+.spd.active{background:var(--gd);color:var(--ink);border-color:var(--gold)}
+#cw{flex:1;position:relative;overflow:hidden;background:#0a1a2c;min-height:0}
+#mc{position:absolute;top:0;left:0;touch-action:none;cursor:crosshair}
+#sb{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);background:rgba(8,4,0,.92);border:1px solid var(--gd);padding:3px 12px;border-radius:20px;font-size:.6rem;color:var(--gold);pointer-events:none;z-index:10;white-space:nowrap;font-family:'Cinzel',serif;letter-spacing:.04em;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+#etick{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:rgba(100,0,0,.9);border:1px solid #ff4444;padding:3px 14px;border-radius:20px;font-size:.58rem;color:#ffbbbb;pointer-events:none;z-index:10;display:none;white-space:nowrap;font-family:'Cinzel',serif;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+.tt{position:absolute;background:rgba(8,4,0,.95);border:1px solid var(--gd);padding:3px 8px;font-size:.66rem;pointer-events:none;display:none;z-index:25;white-space:nowrap;border-radius:2px}
+#drawer{background:var(--panel);border-top:2px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;max-height:44vh}
+.dtabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;scrollbar-width:none;background:#0d0800}
+.dtabs::-webkit-scrollbar{display:none}
+.dtab{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.06em;padding:8px 10px;border:none;background:transparent;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
+.dtab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.dcont{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.dp{display:none;padding:9px 11px}
+.dp.active{display:block}
+.trow{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:7px}
+.tbtn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;background:#1a1000;border:1px solid var(--border);border-radius:3px;color:var(--parch);font-family:'Cinzel',serif;font-size:.44rem;cursor:pointer}
+.tbtn.active{border-color:var(--gold);background:#2a1800;color:var(--gold)}
+.ti{font-size:1rem;line-height:1}
+.brow{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.brow label{font-size:.62rem;color:var(--dim);white-space:nowrap}
+.brow input{flex:1;accent-color:var(--gd)}
+.bval{font-size:.66rem;color:var(--gold);min-width:16px;text-align:right}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+@media(min-width:480px){.tgrid{grid-template-columns:repeat(5,1fr)}}
+.trbtn{display:flex;align-items:center;gap:4px;padding:5px 6px;background:#1a1000;border:2px solid var(--border);border-radius:3px;cursor:pointer;font-size:.57rem;color:var(--parch)}
+.trbtn.active{border-color:white}
+.trmod{color:var(--dim);font-size:.49rem}
+.clist{display:flex;flex-direction:column;gap:4px;max-height:190px;overflow-y:auto}
+.citem{display:flex;align-items:center;gap:6px;padding:6px 8px;background:#1a1000;border:1px solid var(--border);border-radius:3px;cursor:pointer}
+.citem.sel{border-color:var(--gold);background:#251800}
+.cdot{width:11px;height:11px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
+.cn{flex:1;font-size:.76rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ct{font-size:.57rem;color:var(--dim);white-space:nowrap}
+.cai{font-size:.49rem;padding:2px 4px;background:#0d1500;border:1px solid #1a2800;color:#44bb44;border-radius:2px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.cai.on{background:#0d2000;border-color:#33aa00;color:#88ff44}
+.cdel{font-size:.62rem;padding:1px 4px;background:none;border:none;cursor:pointer;color:#883322;flex-shrink:0}
+.acbtn{width:100%;margin-top:6px;padding:7px;background:transparent;border:1px dashed var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.1em;cursor:pointer;border-radius:3px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mbtn{padding:10px 8px;background:#1a1000;border:1px solid var(--border);border-radius:4px;cursor:pointer;text-align:center;transition:all .15s}
+.mbtn:hover{border-color:var(--gold);background:#251800}
+.mbtn .mi{font-size:1.5rem;display:block;margin-bottom:3px}
+.mbtn .mn{font-family:'Cinzel',serif;font-size:.56rem;color:var(--gold);letter-spacing:.06em}
+.mbtn .md{font-size:.54rem;color:var(--dim);margin-top:2px}
+.cgrd{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:start;margin-bottom:7px}
+.selb{width:100%;padding:5px 6px;background:#080500;border:1px solid var(--border);color:var(--parch);font-family:'Crimson Pro',serif;font-size:.8rem;border-radius:2px;-webkit-appearance:none}
+.selb:focus{outline:none;border-color:var(--gd)}
+.clbl{font-family:'Cinzel',serif;font-size:.51rem;letter-spacing:.06em;color:var(--dim);margin-bottom:2px}
+.vsb{font-family:'Cinzel',serif;font-weight:900;color:var(--red);font-size:.92rem;text-align:center;padding-top:14px}
+.hpbg{height:7px;background:#050300;border-radius:2px;overflow:hidden;margin:2px 0 4px}
+.hpf{height:100%;border-radius:2px;transition:width .4s ease}
+.blog{height:90px;overflow-y:auto;background:#050300;border:1px solid var(--border);border-radius:2px;padding:4px 7px;font-size:.64rem;line-height:1.6;margin-bottom:6px}
+.li{color:var(--dim);font-style:italic}.la{color:#ff7744}.ld{color:#55aaff}.lw{color:var(--gold);font-weight:600}.lr{color:#ff44ff}
+.btn{width:100%;padding:8px;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.1em;cursor:pointer;border-radius:3px;border:none;margin-bottom:4px}
+.bfight{background:linear-gradient(180deg,var(--red),var(--rd));color:#fff;border:1px solid #ff4444;box-shadow:0 0 8px rgba(139,0,0,.3)}
+.bfight:disabled{opacity:.4;cursor:not-allowed}
+.bsec{background:#1a1000;border:1px solid var(--border);color:var(--dim)}
+.sblk{background:#150e00;border:1px solid var(--border);border-radius:3px;padding:6px 8px;margin-bottom:5px}
+.stit{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.1em;color:var(--gd);margin-bottom:3px}
+.smin{font-size:.66rem;color:var(--dim);line-height:1.8}
+.smin b{color:var(--gold)}
+.evlog{font-size:.66rem;display:flex;flex-direction:column;gap:1px}
+.evrow{padding:2px 0;border-bottom:1px solid var(--border)}
+/* Alliance styles */
+.alblk{background:#0d1a00;border:1px solid var(--border);border-radius:3px;padding:7px 9px;margin-bottom:6px}
+.altit{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.1em;margin-bottom:4px}
+.almem{font-size:.62rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:3px;margin-bottom:4px}
+.almem span{padding:1px 5px;border-radius:2px;font-size:.56rem}
+.albtn{font-family:'Cinzel',serif;font-size:.48rem;padding:2px 6px;border-radius:2px;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer}
+.albtn:hover{border-color:var(--gold);color:var(--gold)}
+.wtbl{font-size:.66rem;width:100%;border-collapse:collapse}
+.wtbl td,.wtbl th{padding:3px 5px;border-bottom:1px solid var(--border);white-space:nowrap}
+.wtbl th{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.07em;color:var(--gd)}
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);align-items:center;justify-content:center;z-index:999;padding:14px}
+.mbg.open{display:flex}
+.modal{background:linear-gradient(180deg,#1e1200,#110900);border:1px solid var(--gd);border-radius:6px;padding:16px;width:100%;max-width:300px;box-shadow:0 0 40px rgba(200,146,10,.2)}
+.modal h3{font-family:'Cinzel',serif;color:var(--gold);margin-bottom:11px;font-size:.8rem;letter-spacing:.12em}
+.modal label{font-size:.62rem;color:var(--dim);display:block;margin-bottom:3px}
+.modal input[type=text]{width:100%;padding:6px 8px;background:#080500;border:1px solid var(--border);color:var(--parch);font-size:.88rem;border-radius:2px;margin-bottom:9px;font-family:'Crimson Pro',serif}
+.modal input[type=text]:focus{outline:none;border-color:var(--gd)}
+.crow{display:flex;align-items:center;gap:7px;margin-bottom:12px}
+.modal input[type=color]{width:40px;height:34px;border:1px solid var(--border);background:none;cursor:pointer;border-radius:2px;padding:2px;flex-shrink:0}
+.plist{display:flex;flex-wrap:wrap;gap:4px}
+.pdot{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .1s}
+.pdot.sel{border-color:white;transform:scale(1.2)}
+.mbtns{display:flex;gap:6px}
+.mok{flex:1;padding:8px;background:var(--gd);color:var(--ink);font-family:'Cinzel',serif;font-size:.66rem;letter-spacing:.1em;border:none;cursor:pointer;border-radius:2px}
+.mcancel{flex:1;padding:8px;background:#1a1000;border:1px solid var(--border);color:var(--dim);font-family:'Cinzel',serif;font-size:.66rem;cursor:pointer;border-radius:2px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">WAR<em>LANDS</em></div>
+    <div class="hrow">
+      <button class="hbtn active" id="tab-draw" onclick="setMode('draw')">✏️ MAP</button>
+      <button class="hbtn" id="tab-battle" onclick="setMode('battle')">⚔️ BATTLE</button>
+      <button class="hbtn" id="tab-events" onclick="setMode('events')">📜 EVENTS</button>
+      <div class="sep"></div>
+      <div class="spdr" id="spdrow" style="display:none">
+        <button class="spd" data-s="1" onclick="setSpeed(1)">1×</button>
+        <button class="spd" data-s="3" onclick="setSpeed(3)">3×</button>
+        <button class="spd active" data-s="5" onclick="setSpeed(5)">5×</button>
+        <button class="spd" data-s="15" onclick="setSpeed(15)">15×</button>
+      </div>
+      <button class="hbtn go" id="ai-btn" onclick="toggleAI()">▶ AI</button>
+    </div>
+  </header>
+  <div id="cw">
+    <canvas id="mc"></canvas>
+    <div id="sb">WARLANDS — Load a map or draw your own, then start AI!</div>
+    <div id="etick"></div>
+    <div class="tt" id="tt"></div>
+  </div>
+  <div id="drawer">
+    <div class="dtabs" id="dtabs"></div>
+    <div class="dcont" id="dcont"></div>
+  </div>
+</div>
+<div class="mbg" id="mbg">
+  <div class="modal">
+    <h3>⚑ NEW COUNTRY</h3>
+    <label>Name</label>
+    <input type="text" id="mname" placeholder="e.g. Valdoria" maxlength="22" autocomplete="off">
+    <label>Color</label>
+    <div class="crow">
+      <input type="color" id="mcolor" value="#cc3333">
+      <div class="plist" id="plist"></div>
+    </div>
+    <div class="mbtns">
+      <button class="mok" onclick="confirmC()">FOUND</button>
+      <button class="mcancel" onclick="closeM()">CANCEL</button>
+    </div>
+  </div>
+</div>
+<script>
+const COLS=160,ROWS=100;
+const O=0,PL=1,FO=2,MT=3,DE=4,FA=5,SN=6,SW=7,TU=8,SA=9;
+const TR=[
+  {n:'Ocean',   e:'🌊',c:'#1a3a5c',a:-2,d:0, p:0 },
+  {n:'Plains',  e:'🟩',c:'#5a8a3c',a:0, d:0, p:0 },
+  {n:'Forest',  e:'🌲',c:'#2d5016',a:0, d:1, p:0 },
+  {n:'Mountain',e:'⛰️',c:'#5a4a3a',a:0, d:2, p:0 },
+  {n:'Desert',  e:'🏜️',c:'#c8a044',a:0, d:-1,p:0 },
+  {n:'Farmland',e:'🌾',c:'#8aaa44',a:0, d:0, p:1 },
+  {n:'Snow',    e:'❄️',c:'#c8d8e8',a:-1,d:1, p:-1},
+  {n:'Swamp',   e:'🌿',c:'#4a6040',a:-1,d:1, p:0 },
+  {n:'Tundra',  e:'🏔️',c:'#909880',a:-1,d:0, p:-1},
+  {n:'Savanna', e:'🌅',c:'#b8943c',a:1, d:-1,p:0 },
+];
+const PC=['#cc3333','#3355cc','#22aa44','#cc8822','#9922cc','#22aacc','#cc2288','#cc9900','#ee4400','#888888'];
+const CN=['Ironhold','Duskport','Ashenvale','Goldmere','Stormgate','Crownspire','Embermoor','Coldwatch','Sandrift','Thornwall','Mosshaven','Cinderfall','Brightwater','Graykeep','Shadowfen','Dawnreach','Frostholm','Stonemark','Tidecross','Wolfpeak','Sunbarrow','Dustcrown','Highspire','Darkfall','Mistholm','Saltmere','Bloodstone','Firwatch','Silverbend','Ironcliff','Mudwater','Greenwall','Coldmoor','Emberwatch','Riverstone','Goldcrest'];
+const RN=['Free','New','Republic of','Peoples','United','Democratic','Independent','Great','Northern','Southern'];
+const RNN=['Lands','Republic','State','Nation','Kingdom','Federation','Alliance'];
+
+let grid=new Uint8Array(COLS*ROWS),owner=new Int16Array(COLS*ROWS).fill(-1);
+// FIX: 'revolts' declared only once here (was duplicated inside toggleAI causing a shadowing bug)
+let countries=[],cities=[],wars=[],evlog=[],revolts=[],fleets=[];
+// alliances: array of {id, name, members:[cid,...], color}
+let alliances=[];
+let tool='paint',terrain=PL,selC=-1,brush=4;
+let mode='draw',painting=false;
+let camX=0,camY=0,camZ=4,panStart=null,lastPinch=0;
+let aiOn=false,aiSpeed=5,aiTimer=null,manTimer=null,tick=0;
+
+const TRGB=TR.map(t=>[parseInt(t.c.slice(1,3),16),parseInt(t.c.slice(3,5),16),parseInt(t.c.slice(5,7),16)]);
+// FIX: use a plain object for CRGB cache; reset by reassigning on map load
+let CRGB={};
+function crgb(h){if(CRGB[h])return CRGB[h];const r=[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];CRGB[h]=r;return r;}
+
+let canvas,ctx,vpW,vpH,offC,offX,iData;
+function initCanvas(){
+  canvas=document.getElementById('mc');ctx=canvas.getContext('2d');
+  fit();new ResizeObserver(fit).observe(document.getElementById('cw'));
+  canvas.addEventListener('mousedown',oMD);canvas.addEventListener('mousemove',oMM);
+  canvas.addEventListener('mouseup',oMU);canvas.addEventListener('mouseleave',oML);
+  canvas.addEventListener('wheel',oW,{passive:false});canvas.addEventListener('contextmenu',e=>e.preventDefault());
+  canvas.addEventListener('touchstart',oTS,{passive:false});canvas.addEventListener('touchmove',oTM,{passive:false});canvas.addEventListener('touchend',oTE,{passive:false});
+}
+function fit(){
+  const w=document.getElementById('cw');
+  vpW=w.clientWidth;vpH=w.clientHeight;
+  canvas.width=vpW;canvas.height=vpH;
+  // Always fit entire map to screen, respecting both axes
+  camZ=Math.min(vpW/COLS, vpH/ROWS);
+  // Centre the map
+  camX=(COLS*camZ-vpW)/2;
+  camY=(ROWS*camZ-vpH)/2;
+  clamp();redraw();
+}
+function clamp(){
+  const maxX=Math.max(0,COLS*camZ-vpW);
+  const maxY=Math.max(0,ROWS*camZ-vpH);
+  camX=Math.max(0,Math.min(camX,maxX));
+  camY=Math.max(0,Math.min(camY,maxY));
+}
+function getOff(){if(!offC){offC=document.createElement('canvas');offC.width=COLS;offC.height=ROWS;offX=offC.getContext('2d',{willReadFrequently:true});}return{offC,offX};}
+function buildPx(){
+  if(!iData||iData.width!==COLS)iData=new ImageData(COLS,ROWS);
+  const d=iData.data;
+  for(let i=0;i<COLS*ROWS;i++){
+    const tr=TRGB[grid[i]];const cid=owner[i];
+    let r,g,b;
+    if(cid>=0&&countries[cid]){const cr=crgb(countries[cid].color);r=(tr[0]*.62+cr[0]*.38)|0;g=(tr[1]*.62+cr[1]*.38)|0;b=(tr[2]*.62+cr[2]*.38)|0;}
+    else{r=tr[0];g=tr[1];b=tr[2];}
+    const p=i<<2;d[p]=r;d[p+1]=g;d[p+2]=b;d[p+3]=255;
+  }
+}
+function redraw(){
+  if(!ctx||!vpW)return;
+  buildPx();const{offC:oc,offX:ox}=getOff();ox.putImageData(iData,0,0);
+  ctx.clearRect(0,0,vpW,vpH);ctx.imageSmoothingEnabled=camZ<5;
+  ctx.drawImage(oc,0,0,COLS,ROWS,-camX,-camY,COLS*camZ,ROWS*camZ);
+  const cs=camZ;
+  if(cs>=2){
+    const dr=Math.max(2,cs*.38);
+    cities.forEach(city=>{
+      const sx=city.x*cs-camX+cs*.5,sy=city.y*cs-camY+cs*.5;
+      if(sx<-10||sx>vpW+10||sy<-10||sy>vpH+10)return;
+      const col=city.color||'#fff';
+      if(city.isCapital){
+        // Capital: gold star ring + crown emoji
+        const cr=dr*2.2;
+        ctx.beginPath();ctx.arc(sx,sy,cr*1.8,0,6.28);ctx.fillStyle=col+'44';ctx.fill();
+        ctx.beginPath();ctx.arc(sx,sy,cr,0,6.28);ctx.fillStyle='#f0b930';ctx.fill();
+        ctx.beginPath();ctx.arc(sx,sy,cr*.65,0,6.28);ctx.fillStyle=col;ctx.fill();
+        if(cs>=5){
+          ctx.font=`${Math.max(10,cr*1.4)|0}px serif`;
+          ctx.textAlign='center';ctx.textBaseline='middle';
+          ctx.fillText('★',sx,sy);
+        }
+        if(cs>=7){
+          ctx.font=`bold ${Math.max(8,cs*.42|0)}px serif`;
+          ctx.textAlign='center';
+          const tw=ctx.measureText(city.name).width;
+          ctx.fillStyle='rgba(0,0,0,.75)';
+          ctx.fillRect(sx-tw/2-2,sy+cr+1,tw+4,Math.max(9,cs*.42)+2);
+          ctx.fillStyle='#f0b930';
+          ctx.fillText(city.name,sx,sy+cr+Math.max(9,cs*.42));
+        }
+      } else {
+        ctx.beginPath();ctx.arc(sx,sy,dr*2.4,0,6.28);ctx.fillStyle=col+'33';ctx.fill();
+        ctx.beginPath();ctx.arc(sx,sy,dr,0,6.28);ctx.fillStyle='#fff';ctx.fill();
+        ctx.beginPath();ctx.arc(sx,sy,dr*.6,0,6.28);ctx.fillStyle=col;ctx.fill();
+        if(cs>=7){ctx.font=`bold ${Math.max(8,cs*.38|0)}px serif`;ctx.textAlign='center';const tw=ctx.measureText(city.name).width;ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(sx-tw/2-2,sy+dr+1,tw+4,Math.max(9,cs*.38)+2);ctx.fillStyle='#fff';ctx.fillText(city.name,sx,sy+dr+Math.max(9,cs*.38));}
+      }
+    });
+  }
+  if(cs>=3){
+    ctx.lineWidth=Math.max(.7,cs*.11);
+    for(let r2=0;r2<ROWS;r2++){const sy=r2*cs-camY;if(sy>vpH+cs||sy+cs<0)continue;
+      for(let c2=0;c2<COLS;c2++){const sx=c2*cs-camX;if(sx>vpW+cs||sx+cs<0)continue;
+        const idx=r2*COLS+c2,cid=owner[idx];if(cid<0||!countries[cid])continue;
+        // Normal country border
+        ctx.strokeStyle=countries[cid].color;
+        if(c2<COLS-1&&owner[idx+1]!==cid){ctx.beginPath();ctx.moveTo(sx+cs,sy);ctx.lineTo(sx+cs,sy+cs);ctx.stroke();}
+        if(r2<ROWS-1&&owner[idx+COLS]!==cid){ctx.beginPath();ctx.moveTo(sx,sy+cs);ctx.lineTo(sx+cs,sy+cs);ctx.stroke();}
+      }
+    }
+    // Alliance glow: thick dashed line between DIFFERENT alliance members' borders
+    if(alliances.length&&cs>=3){
+      ctx.setLineDash([Math.max(2,cs*.3),Math.max(1,cs*.15)]);
+      ctx.lineWidth=Math.max(1.5,cs*.22);
+      for(let r2=0;r2<ROWS;r2+=2){const sy=r2*cs-camY;if(sy>vpH+cs||sy+cs<0)continue;
+        for(let c2=0;c2<COLS;c2+=2){const sx=c2*cs-camX;if(sx>vpW+cs||sx+cs<0)continue;
+          const idx=r2*COLS+c2,cid=owner[idx];if(cid<0)continue;
+          const al=getAlliance(cid);if(!al)continue;
+          // Check right neighbour
+          if(c2+2<COLS){const rid=owner[r2*COLS+c2+2];if(rid>=0&&rid!==cid&&getAlliance(rid)?.id===al.id){
+            ctx.strokeStyle=al.color+'cc';ctx.beginPath();ctx.moveTo(sx+cs*2,sy);ctx.lineTo(sx+cs*2,sy+cs*2);ctx.stroke();}}
+          // Check bottom neighbour
+          if(r2+2<ROWS){const bid=owner[(r2+2)*COLS+c2];if(bid>=0&&bid!==cid&&getAlliance(bid)?.id===al.id){
+            ctx.strokeStyle=al.color+'cc';ctx.beginPath();ctx.moveTo(sx,sy+cs*2);ctx.lineTo(sx+cs*2,sy+cs*2);ctx.stroke();}}
+        }
+      }
+      ctx.setLineDash([]);
+    }
+  }
+  wars.forEach(w=>{if(w.done||w.fx==null)return;const sx=w.fx*cs-camX+cs*.5,sy=w.fy*cs-camY+cs*.5;const g2=ctx.createRadialGradient(sx,sy,0,sx,sy,Math.max(12,cs*2.8));g2.addColorStop(0,'rgba(255,80,0,.6)');g2.addColorStop(1,'rgba(255,80,0,0)');ctx.beginPath();ctx.arc(sx,sy,Math.max(12,cs*2.8),0,6.28);ctx.fillStyle=g2;ctx.fill();});
+  revolts.forEach(rv=>{if(!rv.flash)return;const sx=rv.x*cs-camX+cs*.5,sy=rv.y*cs-camY+cs*.5;const g2=ctx.createRadialGradient(sx,sy,0,sx,sy,Math.max(8,cs*2));g2.addColorStop(0,'rgba(255,0,255,.7)');g2.addColorStop(1,'rgba(255,0,255,0)');ctx.beginPath();ctx.arc(sx,sy,Math.max(8,cs*2),0,6.28);ctx.fillStyle=g2;ctx.fill();});
+  // Draw fleets as animated ships on the ocean
+  fleets.forEach(f=>{
+    const sx=f.x*cs-camX+cs*.5,sy=f.y*cs-camY+cs*.5;
+    if(sx<-20||sx>vpW+20||sy<-20||sy>vpH+20)return;
+    const col=countries[f.attId]?.color||'#fff';
+    const r=Math.max(4,cs*.55);
+    // Wake trail
+    ctx.beginPath();ctx.arc(sx,sy,r*2.5,0,6.28);
+    const wg=ctx.createRadialGradient(sx,sy,0,sx,sy,r*2.5);
+    wg.addColorStop(0,col+'55');wg.addColorStop(1,'transparent');
+    ctx.fillStyle=wg;ctx.fill();
+    // Ship body
+    ctx.beginPath();ctx.arc(sx,sy,r,0,6.28);ctx.fillStyle='#fff';ctx.fill();
+    ctx.beginPath();ctx.arc(sx,sy,r*.6,0,6.28);ctx.fillStyle=col;ctx.fill();
+    // Ship icon
+    if(cs>=4){ctx.font=`${Math.max(8,r*1.6)|0}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⛵',sx,sy);}
+    // Direction arrow toward next waypoint
+    if(f.wpIdx<f.waypts.length){
+      const[tc,tr]=f.waypts[f.wpIdx];
+      const tx=tc*cs-camX+cs*.5,ty=tr*cs-camY+cs*.5;
+      const dx=tx-sx,dy=ty-sy,dl=Math.sqrt(dx*dx+dy*dy)||1;
+      ctx.strokeStyle=col+'99';ctx.lineWidth=Math.max(1,cs*.12);ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+dx/dl*r*3,sy+dy/dl*r*3);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  });
+}
+
+function oMD(e){if(mode==='draw'){painting=true;applyAt(e.offsetX,e.offsetY);}else{panStart={x:e.clientX+camX,y:e.clientY+camY};}}
+function oMM(e){if(mode==='draw'){if(painting)applyAt(e.offsetX,e.offsetY);showTip(e.offsetX,e.offsetY);}else if(panStart){camX=panStart.x-e.clientX;camY=panStart.y-e.clientY;clamp();redraw();}}
+function oMU(){painting=false;panStart=null;rclList();}
+function oML(){painting=false;panStart=null;document.getElementById('tt').style.display='none';}
+function oW(e){e.preventDefault();const f=e.deltaY<0?1.15:.87;const bc=(e.offsetX+camX)/camZ,br=(e.offsetY+camY)/camZ;const minZ=Math.min(vpW/COLS,vpH/ROWS);camZ=Math.max(minZ,Math.min(50,camZ*f));camX=bc*camZ-e.offsetX;camY=br*camZ-e.offsetY;clamp();redraw();}
+function oTS(e){e.preventDefault();if(e.touches.length===2)lastPinch=pd(e);else if(e.touches.length===1){const t=e.touches[0],rc=canvas.getBoundingClientRect();if(mode==='draw'){painting=true;applyAt(t.clientX-rc.left,t.clientY-rc.top);}else panStart={x:t.clientX+camX,y:t.clientY+camY};}}
+function oTM(e){e.preventDefault();if(e.touches.length===2){const d=pd(e),f=d/lastPinch;const mx=(e.touches[0].clientX+e.touches[1].clientX)/2,my=(e.touches[0].clientY+e.touches[1].clientY)/2;const rc=canvas.getBoundingClientRect(),ox=mx-rc.left,oy=my-rc.top;const bc=(ox+camX)/camZ,br=(oy+camY)/camZ;const minZ=Math.min(vpW/COLS,vpH/ROWS);camZ=Math.max(minZ,Math.min(50,camZ*f));camX=bc*camZ-ox;camY=br*camZ-oy;clamp();redraw();lastPinch=d;}else if(e.touches.length===1){const t=e.touches[0],rc=canvas.getBoundingClientRect();if(mode==='draw'&&painting)applyAt(t.clientX-rc.left,t.clientY-rc.top);else if(panStart){camX=panStart.x-t.clientX;camY=panStart.y-t.clientY;clamp();redraw();}}}
+function oTE(e){e.preventDefault();painting=false;panStart=null;rclList();}
+function pd(e){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;return Math.sqrt(dx*dx+dy*dy);}
+function showTip(sx,sy){
+  const col=(sx+camX)/camZ|0,row=(sy+camY)/camZ|0;
+  if(col<0||col>=COLS||row<0||row>=ROWS)return;
+  const idx=row*COLS+col,t=TR[grid[idx]],cid=owner[idx];
+  const c=cid>=0&&countries[cid]?countries[cid]:null;
+  const cn=c?c.name:'Unclaimed';
+  const eco=c?` · 💰${c.gold} 👥${c.pop}k`:'';
+  const city=cities.find(c=>c.x===col&&c.y===row);
+  const el=document.getElementById('tt');
+  el.style.display='block';el.style.left=(sx+14)+'px';el.style.top=(sy+14)+'px';
+  el.textContent=`${t.e} ${t.n}${city?(city.isCapital?' ★ CAPITAL ':' 🏙 ')+city.name:''} · ${cn}${eco}`;
+}
+
+function applyAt(sx,sy){
+  const col=(sx+camX)/camZ|0,row=(sy+camY)/camZ|0;
+  if(col<0||col>=COLS||row<0||row>=ROWS)return;
+  const idx=row*COLS+col;
+  if(tool==='eyedrop'){terrain=grid[idx];updTBtns();return;}
+  if(tool==='fill'){flood(col,row,grid[idx],terrain,selC);redraw();return;}
+  if(tool==='city'){placeCity(col,row);redraw();return;}
+  const h=brush>>1;
+  for(let dr=-h;dr<=h;dr++)for(let dc=-h;dc<=h;dc++){const rr=row+dr,cc=col+dc;if(rr<0||rr>=ROWS||cc<0||cc>=COLS)continue;const i=rr*COLS+cc;if(tool==='paint'){grid[i]=terrain;owner[i]=selC;}else if(tool==='erase'){grid[i]=O;owner[i]=-1;const ci=cities.findIndex(c=>c.x===cc&&c.y===rr);if(ci>=0)cities.splice(ci,1);}}
+  redraw();
+}
+function flood(col,row,fT,tT,tO){const stk=[[col,row]],seen=new Set();while(stk.length){const[c,r]=stk.pop();if(c<0||c>=COLS||r<0||r>=ROWS)continue;const k=r*COLS+c;if(seen.has(k)||grid[k]!==fT)continue;seen.add(k);grid[k]=tT;owner[k]=tO;stk.push([c+1,r],[c-1,r],[c,r+1],[c,r-1]);}}
+function placeCity(col,row){
+  if(grid[row*COLS+col]===O)return;
+  const ei=cities.findIndex(c=>c.x===col&&c.y===row);
+  if(ei>=0){cities.splice(ei,1);return;}
+  const cid=owner[row*COLS+col];
+  const color=cid>=0&&countries[cid]?countries[cid].color:'#ffffff';
+  // Auto-capital: if this country has no capital yet, make this one it
+  const hasCapital=cid>=0&&cities.some(c=>c.cid===cid&&c.isCapital);
+  cities.push({x:col,y:row,name:CN[Math.random()*CN.length|0],cid,color,isCapital:cid>=0&&!hasCapital});
+}
+
+function addC(name,color,opts={}){
+  const id=countries.length;
+  countries.push({
+    id,name,color,
+    aiEnabled:opts.ai||false,
+    aggression:opts.ag!==undefined?opts.ag:.3+Math.random()*.45,
+    loyalty:opts.ly!==undefined?opts.ly:.6+Math.random()*.3,
+    defensiveness:.5+Math.random()*.4,
+    peaceTimer:0,
+    isRebel:opts.rebel||false,
+    morale: opts.morale!==undefined ? opts.morale : 0.85+Math.random()*.3, // national morale 0-1.3
+    // ── ECONOMY ──
+    gold: opts.gold!==undefined ? opts.gold : 80+Math.random()*120|0,  // starting treasury
+    pop:  opts.pop !==undefined ? opts.pop  : 50+Math.random()*100|0,  // population (thousands)
+    popGrowthAcc:0,   // accumulator for fractional pop growth each tick
+  });
+  return id;
+}
+function countT(id){let n=0;for(let i=0;i<owner.length;i++)if(owner[i]===id)n++;return n;}
+function rclList(){
+  const list=document.getElementById('clist');if(!list)return;
+  list.innerHTML='';
+  const none=mk('div','citem'+(selC===-1?' sel':''));
+  none.innerHTML=`<div class="cdot" style="background:#333"></div><span class="cn" style="color:var(--dim)">No country</span>`;
+  none.onclick=()=>{selC=-1;rclList();};list.appendChild(none);
+  countries.forEach(c=>{
+    const tiles=countT(c.id);
+    const it=mk('div','citem'+(selC===c.id?' sel':''));
+    it.innerHTML=`<div class="cdot" style="background:${c.color}"></div>`+
+      `<span class="cn">${c.name}${c.isRebel?' ⚡':''}</span>`+
+      `<span class="ct" style="color:var(--gold)" title="Gold">💰${c.gold||0}</span>`+
+      `<span class="ct" style="color:#44cc88" title="Population">👥${c.pop||0}k</span>`+
+      `<button class="cai${c.aiEnabled?' on':''}" onclick="togAI(${c.id},event)">${c.aiEnabled?'🤖':'💤'}</button>`+
+      `<button class="cdel" onclick="delC(${c.id},event)">✕</button>`;
+    it.onclick=()=>{selC=c.id;rclList();};
+    list.appendChild(it);
+  });
+}
+function togAI(id,e){e.stopPropagation();const c=countries[id];if(c)c.aiEnabled=!c.aiEnabled;rclList();}
+function mk(tag,cls=''){const e=document.createElement(tag);e.className=cls;return e;}
+function delC(id,e){e.stopPropagation();if(!confirm(`Remove ${countries[id]?.name}?`))return;for(let i=0;i<owner.length;i++)if(owner[i]===id)owner[i]=-1;countries.splice(id,1);countries.forEach((c,ni)=>{const old=c.id;c.id=ni;for(let i=0;i<owner.length;i++)if(owner[i]===old)owner[i]=ni;});cities.forEach(c=>{if(c.cid===id)c.cid=-1;else if(c.cid>id)c.cid--;});if(selC>=countries.length)selC=-1;rclList();fillSels();redraw();}
+function clearMap(){if(!confirm('Clear entire map?'))return;grid.fill(O);owner.fill(-1);cities.length=0;wars.length=0;revolts.length=0;redraw();rclList();}
+
+function openM(){document.getElementById('mbg').classList.add('open');const pl=document.getElementById('plist');pl.innerHTML='';PC.forEach(col=>{const d=mk('div','pdot');d.style.background=col;d.onclick=()=>{document.getElementById('mcolor').value=col;pl.querySelectorAll('.pdot').forEach(p=>p.classList.remove('sel'));d.classList.add('sel');};pl.appendChild(d);});document.getElementById('mname').focus();}
+function closeM(){document.getElementById('mbg').classList.remove('open');}
+function confirmC(){const name=document.getElementById('mname').value.trim()||'Unknown';const color=document.getElementById('mcolor').value;const id=addC(name,color);selC=id;rclList();fillSels();closeM();document.getElementById('mname').value='';}
+document.getElementById('mbg').addEventListener('click',function(e){if(e.target===this)closeM();});
+
+const TABS={draw:[{id:'tools',l:'🔧 Tools'},{id:'terrain',l:'🗺 Terrain'},{id:'countries',l:'⚑ Countries'},{id:'maps',l:'🌍 Maps'}],battle:[{id:'battle',l:'⚔️ Battle'},{id:'stats',l:'📊 Stats'}],events:[{id:'evlog',l:'📜 Events'},{id:'nations',l:'🌍 Nations'},{id:'alliances',l:'🤝 Alliances'}]};
+function buildDrawer(){buildTabs();buildPanels();showTab(TABS[mode][0].id);}
+function buildTabs(){const el=document.getElementById('dtabs');el.innerHTML='';TABS[mode].forEach(({id,l})=>{const b=mk('button','dtab');b.dataset.id=id;b.textContent=l;b.onclick=()=>showTab(id);el.appendChild(b);});}
+function showTab(id){document.querySelectorAll('.dtab').forEach(b=>b.classList.toggle('active',b.dataset.id===id));document.querySelectorAll('.dp').forEach(p=>p.classList.toggle('active',p.id==='p-'+id));}
+function buildPanels(){
+  const el=document.getElementById('dcont');el.innerHTML='';
+  if(mode==='draw'){
+    el.innerHTML=`<div class="dp" id="p-tools">${toolsH()}</div><div class="dp" id="p-terrain">${terrH()}</div><div class="dp" id="p-countries"><div class="clist" id="clist"></div><button class="acbtn" onclick="openM()">+ ADD COUNTRY</button><button class="btn bsec" onclick="clearMap()" style="margin-top:6px">🗑 CLEAR MAP</button></div><div class="dp" id="p-maps">${mapsH()}</div>`;
+    document.querySelectorAll('.tbtn').forEach(b=>b.onclick=()=>setTool(b.dataset.t));
+    const br=document.getElementById('brange');if(br)br.oninput=function(){brush=+this.value;document.getElementById('bval').textContent=brush;};
+    document.querySelectorAll('.trbtn').forEach(b=>b.onclick=()=>{terrain=+b.dataset.i;updTBtns();});
+    rclList();
+  }else if(mode==='battle'){
+    el.innerHTML=`<div class="dp" id="p-battle">${battleH()}</div><div class="dp" id="p-stats"><div id="sbody" style="font-size:.7rem;color:var(--dim)">Select countries.</div></div>`;
+    fillSels();document.getElementById('sel-a').addEventListener('change',refreshStats);document.getElementById('sel-d').addEventListener('change',refreshStats);refreshStats();
+  }else{
+    el.innerHTML=`<div class="dp" id="p-evlog"><div id="evlogbody"></div></div><div class="dp" id="p-nations"><div id="natbody"></div></div><div class="dp" id="p-alliances"><div id="albody"></div></div>`;
+    refreshEUI();
+  }
+}
+function toolsH(){const T=[{t:'paint',i:'🖌️',l:'Paint'},{t:'erase',i:'⬜',l:'Erase'},{t:'fill',i:'🪣',l:'Fill'},{t:'eyedrop',i:'💧',l:'Pick'},{t:'city',i:'🏙️',l:'City'}];return`<div class="trow">${T.map(({t,i,l})=>`<button class="tbtn${t===tool?' active':''}" data-t="${t}"><span class="ti">${i}</span>${l}</button>`).join('')}</div><div class="brow"><label>Brush</label><input type="range" id="brange" min="1" max="20" value="${brush}"><span class="bval" id="bval">${brush}</span></div>`;}
+function terrH(){return`<div class="tgrid">${TR.map((t,i)=>`<button class="trbtn${i===terrain?' active':''}" data-i="${i}" style="${i===terrain?'border-color:white':''}"><span style="font-size:.95rem">${t.e}</span><span><span style="font-size:.56rem">${t.n}</span><br><span class="trmod">Atk${t.a>=0?'+':''}${t.a} Def${t.d>=0?'+':''}${t.d}</span></span></button>`).join('')}</div>`;}
+function mapsH(){return`<div class="mgrid"><div class="mbtn" onclick="loadMap('usa')"><span class="mi">🇺🇸</span><div class="mn">UNITED STATES</div><div class="md">50 states + cities</div></div><div class="mbtn" onclick="loadMap('world')"><span class="mi">🌍</span><div class="mn">WORLD</div><div class="md">Major nations</div></div><div class="mbtn" onclick="loadMap('europe')"><span class="mi">🇪🇺</span><div class="mn">EUROPE</div><div class="md">European nations</div></div><div class="mbtn" onclick="loadMap('fantasy')"><span class="mi">🏰</span><div class="mn">FANTASY REALM</div><div class="md">Random world</div></div></div>`;}
+function setTool(t){tool=t;document.querySelectorAll('.tbtn').forEach(b=>b.classList.toggle('active',b.dataset.t===t));}
+function updTBtns(){document.querySelectorAll('.trbtn').forEach(b=>{const a=+b.dataset.i===terrain;b.classList.toggle('active',a);b.style.borderColor=a?'white':'';});}
+
+// ── MAPS ──
+function loadMap(name){
+  // FIX: fully reset all state arrays before loading a new map
+  // Previously 'countries' was not reset, causing new map countries to append to old ones
+  // and wars were not cleared, leaving stale war objects with invalid country IDs
+  grid.fill(O);owner.fill(-1);
+  cities.length=0;wars.length=0;revolts.length=0;evlog.length=0;fleets.length=0;
+  countries.length=0;alliances.length=0;allianceIdSeq=0;
+  selC=-1;
+  CRGB={};coastCache={};coastDirty=true;
+  if(name==='usa')buildUSA();else if(name==='world')buildWorld();else if(name==='europe')buildEurope();else buildFantasy();
+  camZ=Math.min(vpW/COLS,vpH/ROWS);
+  camX=(COLS*camZ-vpW)/2;
+  camY=(ROWS*camZ-vpH)/2;
+  redraw();
+  // FIX: rebuild drawer so country lists and selects reflect the new map
+  buildDrawer();
+  fillSels();
+  refreshStats();
+  showTab('countries');
+  addEv(`🗺️ Map loaded: ${name.toUpperCase()}`,'li');
+  updStatus();
+}
+function fr(c1,r1,c2,r2,t,cid){for(let r=r1;r<=r2&&r<ROWS;r++)for(let c=c1;c<=c2&&c<COLS;c++){grid[r*COLS+c]=t;owner[r*COLS+c]=cid;}}
+function fe(cx,cy,rx,ry,t,cid){for(let r=Math.max(0,cy-ry);r<=Math.min(ROWS-1,cy+ry);r++)for(let c=Math.max(0,cx-rx);c<=Math.min(COLS-1,cx+rx);c++){const dx=(c-cx)/rx,dy=(r-cy)/ry;if(dx*dx+dy*dy<=1){grid[r*COLS+c]=t;owner[r*COLS+c]=cid;}}}
+// Place a city. isCapital=true marks it as the country's capital.
+function ac(x,y,name,cid,isCapital=false){
+  if(x<0||x>=COLS||y<0||y>=ROWS)return;
+  cities.push({x,y,name,cid,color:cid>=0&&countries[cid]?countries[cid].color:'#fff',isCapital:!!isCapital});
+}
+// Convenience: place capital (always first city listed per country in map builders)
+function acap(x,y,name,cid){ac(x,y,name,cid,true);}
+
+function buildUSA(){
+  // 160×100 grid. Mainland: col 5-122, row 4-65. Alaska: col 2-30, row 68-96. Hawaii: col 30-50, row 72-82.
+  // Territories placed in Pacific/Caribbean corners.
+  const S=[
+    // === PACIFIC NORTHWEST ===
+    {n:'Washington',    c:'#7ec8c8',ag:.25,r:[5,4,18,13],  t:FO,ci:[{n:'Seattle',x:10,y:7},{n:'Olympia',x:7,y:10}]},
+    {n:'Oregon',        c:'#a3c97a',ag:.22,r:[5,13,18,24],  t:FO,ci:[{n:'Portland',x:9,y:16},{n:'Salem',x:8,y:18}]},
+    // === CALIFORNIA ===
+    {n:'California',    c:'#f4a460',ag:.38,r:[5,24,18,55],  t:PL,ci:[{n:'Sacramento',x:9,y:30},{n:'San Francisco',x:7,y:36},{n:'Los Angeles',x:10,y:46},{n:'San Diego',x:11,y:53}]},
+    // === MOUNTAIN WEST ===
+    {n:'Nevada',        c:'#d4b483',ag:.3, r:[18,24,28,42], t:DE,ci:[{n:'Las Vegas',x:22,y:39},{n:'Reno',x:19,y:27}]},
+    {n:'Idaho',         c:'#b8d4a8',ag:.27,r:[18,4,30,24],  t:MT,ci:[{n:'Boise',x:23,y:20}]},
+    {n:'Montana',       c:'#aabccc',ag:.2, r:[29,4,52,17],  t:MT,ci:[{n:'Helena',x:34,y:9},{n:'Billings',x:41,y:13}]},
+    {n:'Wyoming',       c:'#c8c87a',ag:.22,r:[29,17,48,27], t:MT,ci:[{n:'Cheyenne',x:41,y:25}]},
+    {n:'Colorado',      c:'#e8896a',ag:.3, r:[29,27,48,37], t:MT,ci:[{n:'Denver',x:37,y:30}]},
+    {n:'Utah',          c:'#e8a870',ag:.28,r:[19,27,29,42], t:DE,ci:[{n:'Salt Lake City',x:23,y:31}]},
+    {n:'Arizona',       c:'#e87a44',ag:.33,r:[19,42,32,55], t:DE,ci:[{n:'Phoenix',x:24,y:48},{n:'Tucson',x:25,y:52}]},
+    {n:'New Mexico',    c:'#d4994c',ag:.3, r:[28,37,42,55], t:DE,ci:[{n:'Albuquerque',x:33,y:44},{n:'Santa Fe',x:33,y:40}]},
+    // === GREAT PLAINS ===
+    {n:'North Dakota',  c:'#88aacc',ag:.18,r:[48,4,63,14],  t:PL,ci:[{n:'Bismarck',x:54,y:9}]},
+    {n:'South Dakota',  c:'#99bbdd',ag:.2, r:[48,14,63,23], t:PL,ci:[{n:'Pierre',x:54,y:17},{n:'Sioux Falls',x:60,y:21}]},
+    {n:'Nebraska',      c:'#99b888',ag:.22,r:[43,23,63,31], t:PL,ci:[{n:'Lincoln',x:55,y:27},{n:'Omaha',x:59,y:25}]},
+    {n:'Kansas',        c:'#b8cc88',ag:.25,r:[43,31,63,39], t:PL,ci:[{n:'Topeka',x:54,y:34},{n:'Wichita',x:55,y:37}]},
+    {n:'Oklahoma',      c:'#c8a866',ag:.28,r:[41,39,62,47], t:PL,ci:[{n:'Oklahoma City',x:52,y:42},{n:'Tulsa',x:57,y:40}]},
+    {n:'Texas',         c:'#cc4444',ag:.55,r:[35,47,62,68], t:SA,ci:[{n:'Austin',x:50,y:59},{n:'Dallas',x:54,y:49},{n:'Houston',x:55,y:63},{n:'San Antonio',x:49,y:63},{n:'El Paso',x:36,y:55}]},
+    // === MIDWEST ===
+    {n:'Minnesota',     c:'#6699cc',ag:.24,r:[57,4,74,20],  t:FO,ci:[{n:'Minneapolis',x:65,y:14},{n:'St Paul',x:66,y:15}]},
+    {n:'Iowa',          c:'#88bb66',ag:.23,r:[57,20,74,28], t:FA,ci:[{n:'Des Moines',x:65,y:24}]},
+    {n:'Missouri',      c:'#a8b866',ag:.3, r:[57,28,74,39], t:FA,ci:[{n:'Kansas City',x:61,y:32},{n:'St Louis',x:70,y:35}]},
+    {n:'Arkansas',      c:'#88aa66',ag:.28,r:[57,39,73,49], t:FO,ci:[{n:'Little Rock',x:64,y:44}]},
+    {n:'Louisiana',     c:'#669977',ag:.32,r:[57,49,73,60], t:SW,ci:[{n:'New Orleans',x:66,y:57},{n:'Baton Rouge',x:64,y:54}]},
+    {n:'Mississippi',   c:'#779966',ag:.28,r:[67,39,77,58], t:FA,ci:[{n:'Jackson',x:70,y:48}]},
+    {n:'Wisconsin',     c:'#6688bb',ag:.22,r:[67,4,80,20],  t:FO,ci:[{n:'Madison',x:72,y:16},{n:'Milwaukee',x:75,y:18}]},
+    {n:'Michigan',      c:'#5577bb',ag:.25,r:[74,4,88,20],  t:FO,ci:[{n:'Lansing',x:79,y:14},{n:'Detroit',x:83,y:17}]},
+    {n:'Illinois',      c:'#8899bb',ag:.3, r:[68,20,79,37], t:FA,ci:[{n:'Chicago',x:73,y:21},{n:'Springfield',x:72,y:30}]},
+    {n:'Indiana',       c:'#9988bb',ag:.27,r:[76,20,84,37], t:FA,ci:[{n:'Indianapolis',x:79,y:28}]},
+    {n:'Ohio',          c:'#7799bb',ag:.28,r:[83,16,93,32], t:FA,ci:[{n:'Columbus',x:87,y:24},{n:'Cleveland',x:88,y:18}]},
+    {n:'Kentucky',      c:'#779944',ag:.3, r:[76,33,93,40], t:FO,ci:[{n:'Louisville',x:81,y:35},{n:'Frankfort',x:84,y:35}]},
+    {n:'Tennessee',     c:'#99bb44',ag:.32,r:[70,40,93,48], t:FO,ci:[{n:'Nashville',x:80,y:43},{n:'Memphis',x:71,y:43}]},
+    // === SOUTH ===
+    {n:'Alabama',       c:'#aacc55',ag:.3, r:[73,48,82,61], t:FO,ci:[{n:'Birmingham',x:76,y:51},{n:'Montgomery',x:77,y:57}]},
+    {n:'Georgia',       c:'#bbcc55',ag:.3, r:[81,48,93,61], t:FO,ci:[{n:'Atlanta',x:85,y:51},{n:'Savannah',x:91,y:59}]},
+    {n:'Florida',       c:'#e8aa77',ag:.35,r:[77,61,111,74],t:SW,ci:[{n:'Tallahassee',x:80,y:63},{n:'Orlando',x:90,y:68},{n:'Miami',x:97,y:73},{n:'Tampa',x:86,y:68}]},
+    {n:'South Carolina',c:'#ccbb55',ag:.28,r:[88,43,100,52],t:FO,ci:[{n:'Columbia',x:92,y:47},{n:'Charleston',x:97,y:51}]},
+    {n:'North Carolina',c:'#aabb44',ag:.27,r:[85,37,103,45],t:FO,ci:[{n:'Raleigh',x:96,y:41},{n:'Charlotte',x:89,y:42}]},
+    {n:'Virginia',      c:'#8899bb',ag:.3, r:[89,31,103,39],t:FO,ci:[{n:'Richmond',x:97,y:34},{n:'Virginia Beach',x:103,y:35}]},
+    {n:'West Virginia', c:'#779988',ag:.25,r:[83,31,90,38], t:MT,ci:[{n:'Charleston',x:86,y:34}]},
+    // === NORTHEAST ===
+    {n:'Pennsylvania',  c:'#7788cc',ag:.28,r:[90,23,103,32],t:FO,ci:[{n:'Harrisburg',x:98,y:27},{n:'Philadelphia',x:103,y:28},{n:'Pittsburgh',x:91,y:26}]},
+    {n:'New York',      c:'#6677cc',ag:.33,r:[96,10,115,23],t:FO,ci:[{n:'Albany',x:108,y:16},{n:'New York City',x:111,y:21},{n:'Buffalo',x:99,y:14}]},
+    {n:'Maryland',      c:'#6677aa',ag:.27,r:[96,31,103,35],t:PL,ci:[{n:'Annapolis',x:101,y:32}]},
+    {n:'Delaware',      c:'#8899cc',ag:.24,r:[103,27,107,32],t:PL,ci:[{n:'Dover',x:105,y:29}]},
+    {n:'New Jersey',    c:'#9999cc',ag:.26,r:[104,22,110,28],t:PL,ci:[{n:'Trenton',x:107,y:24}]},
+    {n:'Connecticut',   c:'#6688cc',ag:.25,r:[110,18,116,22],t:FO,ci:[{n:'Hartford',x:112,y:19}]},
+    {n:'Rhode Island',  c:'#5577cc',ag:.22,r:[115,18,119,21],t:PL,ci:[{n:'Providence',x:116,y:19}]},
+    {n:'Massachusetts', c:'#5577bb',ag:.28,r:[108,14,118,19],t:FO,ci:[{n:'Boston',x:114,y:16}]},
+    {n:'New Hampshire', c:'#667744',ag:.22,r:[111,9,117,15], t:FO,ci:[{n:'Concord',x:113,y:12}]},
+    {n:'Vermont',       c:'#556633',ag:.22,r:[107,9,112,15], t:FO,ci:[{n:'Montpelier',x:109,y:12}]},
+    {n:'Maine',         c:'#447755',ag:.2, r:[112,4,122,13], t:FO,ci:[{n:'Augusta',x:117,y:9},{n:'Portland',x:116,y:11}]},
+    // === ALASKA & HAWAII ===
+    {n:'Alaska',        c:'#77aacc',ag:.2, r:[2,68,30,96],  t:SN,ci:[{n:'Anchorage',x:12,y:82},{n:'Juneau',x:24,y:90},{n:'Fairbanks',x:14,y:73}]},
+    {n:'Hawaii',        c:'#e8aa66',ag:.25,r:[30,72,50,82], t:FA,ci:[{n:'Honolulu',x:36,y:77}]},
+    // === U.S. TERRITORIES ===
+    // Puerto Rico — Caribbean, bottom-right area col 122-134, row 62-68
+    {n:'Puerto Rico',   c:'#cc2244',ag:.28,r:[122,62,134,68],t:PL,ci:[{n:'San Juan',x:124,y:64}]},
+    // U.S. Virgin Islands — tiny, near Puerto Rico
+    {n:'U.S. Virgin Is.',c:'#aa1133',ag:.2,r:[135,62,141,67],t:PL,ci:[{n:'Charlotte Amalie',x:136,y:64}]},
+    // Guam — Western Pacific, lower right
+    {n:'Guam',          c:'#3355aa',ag:.2, r:[145,68,154,74],t:PL,ci:[{n:'Hagåtña',x:147,y:70}]},
+    // Northern Mariana Islands — near Guam
+    {n:'N. Mariana Is.',c:'#2244aa',ag:.18,r:[145,60,154,67],t:PL,ci:[{n:'Saipan',x:147,y:62}]},
+    // American Samoa — lower Pacific
+    {n:'American Samoa',c:'#4477bb',ag:.18,r:[50,82,60,88], t:PL,ci:[{n:'Pago Pago',x:52,y:84}]},
+    // Washington DC — squeezed between Maryland/Virginia
+    {n:'Washington DC', c:'#ffdd00',ag:.15,r:[100,32,104,36],t:PL,ci:[{n:'Capitol',x:101,y:33}]},
+  ];
+  S.forEach(s=>{const id=addC(s.n,s.c,{ag:s.ag,ai:true,ly:.7+Math.random()*.25});const[c1,r1,c2,r2]=s.r;fr(c1,r1,c2,r2,s.t,id);(s.ci||[]).forEach(({n,x,y},i)=>{if(x<COLS&&y<ROWS)ac(x,y,n,id,i===0);});});
+}
+
+function buildWorld(){
+  // 160×100 grid. col=(lon+180)/360*160, row=(90-lat)/180*100
+  const W=[
+    // ── NORTH AMERICA ──
+    {n:'Canada',          c:'#dd5555',ag:.2, r:[5,3,55,20],   t:FO,ci:[{n:'Ottawa',x:42,y:18},{n:'Vancouver',x:12,y:17},{n:'Toronto',x:42,y:19}]},
+    {n:'USA',             c:'#4477cc',ag:.45,r:[9,20,48,37],  t:PL,ci:[{n:'Washington DC',x:40,y:27},{n:'New York',x:41,y:25},{n:'Los Angeles',x:14,y:31},{n:'Chicago',x:37,y:24}]},
+    {n:'Alaska',          c:'#5588aa',ag:.2, r:[0,10,12,20],  t:SN,ci:[{n:'Anchorage',x:5,y:16}]},
+    {n:'Mexico',          c:'#33bb55',ag:.35,r:[11,37,30,48], t:SA,ci:[{n:'Mexico City',x:20,y:43}]},
+    {n:'Guatemala',       c:'#22aa44',ag:.32,r:[18,46,22,50], t:FO,ci:[{n:'Guatemala City',x:19,y:48}]},
+    {n:'Belize',          c:'#33bb44',ag:.25,r:[21,44,24,48], t:FO,ci:[{n:'Belmopan',x:22,y:46}]},
+    {n:'Honduras',        c:'#2299aa',ag:.33,r:[20,48,26,52], t:FO,ci:[{n:'Tegucigalpa',x:22,y:50}]},
+    {n:'El Salvador',     c:'#4488cc',ag:.35,r:[19,50,23,53], t:PL,ci:[{n:'San Salvador',x:20,y:51}]},
+    {n:'Nicaragua',       c:'#338833',ag:.32,r:[21,51,27,55], t:FO,ci:[{n:'Managua',x:23,y:53}]},
+    {n:'Costa Rica',      c:'#44bb55',ag:.28,r:[22,54,27,57], t:FO,ci:[{n:'San José',x:24,y:55}]},
+    {n:'Panama',          c:'#cc8833',ag:.3, r:[23,56,29,59], t:FO,ci:[{n:'Panama City',x:25,y:57}]},
+    {n:'Cuba',            c:'#ee8833',ag:.3, r:[28,41,38,45], t:PL,ci:[{n:'Havana',x:30,y:43}]},
+    {n:'Jamaica',         c:'#ddcc00',ag:.28,r:[30,45,34,48], t:PL,ci:[{n:'Kingston',x:32,y:46}]},
+    {n:'Haiti',           c:'#cc4444',ag:.4, r:[33,43,37,47], t:MT,ci:[{n:'Port-au-Prince',x:34,y:45}]},
+    {n:'Dominican Rep.',  c:'#3366cc',ag:.35,r:[36,43,40,47], t:MT,ci:[{n:'Santo Domingo',x:37,y:45}]},
+    {n:'Puerto Rico',     c:'#ff4466',ag:.25,r:[40,43,43,46], t:PL,ci:[{n:'San Juan',x:41,y:44}]},
+    {n:'Trinidad & Tobago',c:'#ee5500',ag:.28,r:[34,52,38,55],t:PL,ci:[{n:'Port of Spain',x:35,y:53}]},
+    // ── CENTRAL AMERICA / CARIBBEAN done ──
+    // ── SOUTH AMERICA ──
+    {n:'Colombia',        c:'#ee9900',ag:.35,r:[22,52,32,62], t:FO,ci:[{n:'Bogotá',x:26,y:57}]},
+    {n:'Venezuela',       c:'#ffcc00',ag:.38,r:[28,48,42,56], t:SA,ci:[{n:'Caracas',x:32,y:50}]},
+    {n:'Guyana',          c:'#44aa88',ag:.28,r:[37,50,42,56], t:FO,ci:[{n:'Georgetown',x:38,y:52}]},
+    {n:'Suriname',        c:'#55bb77',ag:.25,r:[41,50,45,56], t:FO,ci:[{n:'Paramaribo',x:42,y:52}]},
+    {n:'French Guiana',   c:'#0055aa',ag:.2, r:[44,50,48,56], t:FO,ci:[{n:'Cayenne',x:45,y:52}]},
+    {n:'Ecuador',         c:'#ffaa00',ag:.33,r:[20,57,26,64], t:MT,ci:[{n:'Quito',x:22,y:59}]},
+    {n:'Peru',            c:'#cc3333',ag:.3, r:[20,60,29,74], t:MT,ci:[{n:'Lima',x:22,y:67}]},
+    {n:'Brazil',          c:'#22bb22',ag:.38,r:[28,54,53,82], t:FO,ci:[{n:'Brasília',x:40,y:67},{n:'São Paulo',x:41,y:74},{n:'Rio de Janeiro',x:42,y:73}]},
+    {n:'Bolivia',         c:'#cc7700',ag:.32,r:[26,66,33,75], t:MT,ci:[{n:'La Paz',x:27,y:68}]},
+    {n:'Paraguay',        c:'#aacc44',ag:.28,r:[30,70,36,77], t:PL,ci:[{n:'Asunción',x:32,y:73}]},
+    {n:'Chile',           c:'#ee4444',ag:.28,r:[22,72,29,97], t:MT,ci:[{n:'Santiago',x:25,y:82}]},
+    {n:'Argentina',       c:'#6699ff',ag:.3, r:[26,74,42,97], t:PL,ci:[{n:'Buenos Aires',x:33,y:86}]},
+    {n:'Uruguay',         c:'#66bbff',ag:.25,r:[34,79,41,83], t:PL,ci:[{n:'Montevideo',x:36,y:81}]},
+    // ── EUROPE ──
+    {n:'Iceland',         c:'#99bbcc',ag:.18,r:[65,9,74,15],  t:SN,ci:[{n:'Reykjavik',x:68,y:12}]},
+    {n:'UK',              c:'#cc2222',ag:.3, r:[72,16,79,24], t:PL,ci:[{n:'London',x:76,y:21},{n:'Edinburgh',x:75,y:17}]},
+    {n:'Ireland',         c:'#33aa33',ag:.22,r:[69,16,73,22], t:FO,ci:[{n:'Dublin',x:71,y:19}]},
+    {n:'Portugal',        c:'#cc3333',ag:.28,r:[69,26,73,35], t:PL,ci:[{n:'Lisbon',x:71,y:30}]},
+    {n:'Spain',           c:'#ffaa00',ag:.3, r:[71,24,81,34], t:PL,ci:[{n:'Madrid',x:75,y:29},{n:'Barcelona',x:79,y:27}]},
+    {n:'France',          c:'#0044cc',ag:.32,r:[75,22,83,30], t:FA,ci:[{n:'Paris',x:78,y:24},{n:'Marseille',x:79,y:29}]},
+    {n:'Belgium',         c:'#ffcc00',ag:.25,r:[78,20,82,23], t:PL,ci:[{n:'Brussels',x:79,y:22}]},
+    {n:'Netherlands',     c:'#ff8800',ag:.26,r:[78,18,82,21], t:PL,ci:[{n:'Amsterdam',x:79,y:20}]},
+    {n:'Luxembourg',      c:'#ff4488',ag:.18,r:[79,22,81,24], t:PL,ci:[{n:'Luxembourg',x:80,y:23}]},
+    {n:'Switzerland',     c:'#cc0000',ag:.18,r:[79,25,84,28], t:MT,ci:[{n:'Bern',x:81,y:26}]},
+    {n:'Germany',         c:'#666666',ag:.3, r:[80,17,89,26], t:PL,ci:[{n:'Berlin',x:85,y:19},{n:'Munich',x:83,y:24}]},
+    {n:'Denmark',         c:'#cc3333',ag:.22,r:[81,14,87,18], t:PL,ci:[{n:'Copenhagen',x:84,y:17}]},
+    {n:'Norway',          c:'#cc3333',ag:.22,r:[79,7,90,18],  t:MT,ci:[{n:'Oslo',x:83,y:16}]},
+    {n:'Sweden',          c:'#3366ff',ag:.22,r:[84,7,93,20],  t:FO,ci:[{n:'Stockholm',x:88,y:16}]},
+    {n:'Finland',         c:'#3399ff',ag:.2, r:[89,7,98,18],  t:FO,ci:[{n:'Helsinki',x:93,y:17}]},
+    {n:'Estonia',         c:'#0044cc',ag:.25,r:[89,16,94,18], t:FO,ci:[{n:'Tallinn',x:91,y:17}]},
+    {n:'Latvia',          c:'#cc0044',ag:.25,r:[89,17,94,19], t:FO,ci:[{n:'Riga',x:91,y:18}]},
+    {n:'Lithuania',       c:'#ffcc00',ag:.25,r:[88,19,93,21], t:PL,ci:[{n:'Vilnius',x:91,y:20}]},
+    {n:'Poland',          c:'#ee3333',ag:.28,r:[85,17,95,23], t:PL,ci:[{n:'Warsaw',x:90,y:20}]},
+    {n:'Czech Rep.',      c:'#3366cc',ag:.25,r:[84,21,91,25], t:PL,ci:[{n:'Prague',x:87,y:22}]},
+    {n:'Slovakia',        c:'#0088cc',ag:.24,r:[88,23,93,26], t:MT,ci:[{n:'Bratislava',x:89,y:24}]},
+    {n:'Austria',         c:'#cc3333',ag:.24,r:[83,24,90,27], t:MT,ci:[{n:'Vienna',x:88,y:25}]},
+    {n:'Hungary',         c:'#cc4400',ag:.28,r:[87,25,94,29], t:PL,ci:[{n:'Budapest',x:90,y:27}]},
+    {n:'Slovenia',        c:'#44bb44',ag:.22,r:[84,27,87,29], t:MT,ci:[{n:'Ljubljana',x:85,y:28}]},
+    {n:'Croatia',         c:'#cc3366',ag:.28,r:[85,27,90,31], t:FO,ci:[{n:'Zagreb',x:86,y:28}]},
+    {n:'Bosnia & Herz.',  c:'#cc5544',ag:.35,r:[87,28,91,31], t:MT,ci:[{n:'Sarajevo',x:88,y:30}]},
+    {n:'Serbia',          c:'#cc3333',ag:.35,r:[89,26,93,30], t:PL,ci:[{n:'Belgrade',x:90,y:27}]},
+    {n:'Montenegro',      c:'#cc4455',ag:.3, r:[88,30,91,32], t:MT,ci:[{n:'Podgorica',x:89,y:31}]},
+    {n:'Kosovo',          c:'#ddaa00',ag:.35,r:[89,30,92,32], t:MT,ci:[{n:'Pristina',x:90,y:31}]},
+    {n:'N. Macedonia',    c:'#ddaa22',ag:.3, r:[89,31,93,33], t:MT,ci:[{n:'Skopje',x:91,y:32}]},
+    {n:'Albania',         c:'#cc3333',ag:.32,r:[88,31,91,34], t:MT,ci:[{n:'Tirana',x:89,y:33}]},
+    {n:'Romania',         c:'#3399ff',ag:.3, r:[90,22,99,29], t:PL,ci:[{n:'Bucharest',x:94,y:27}]},
+    {n:'Moldova',         c:'#aa4433',ag:.28,r:[93,22,97,25], t:PL,ci:[{n:'Chișinău',x:95,y:23}]},
+    {n:'Bulgaria',        c:'#cc6600',ag:.28,r:[90,29,98,33], t:PL,ci:[{n:'Sofia',x:92,y:31}]},
+    {n:'Greece',          c:'#3366ff',ag:.3, r:[88,33,97,39], t:MT,ci:[{n:'Athens',x:91,y:36}]},
+    {n:'Cyprus',          c:'#4488ff',ag:.25,r:[96,32,100,34],t:PL,ci:[{n:'Nicosia',x:97,y:33}]},
+    {n:'Ukraine',         c:'#3399ff',ag:.3, r:[90,19,106,25],t:FA,ci:[{n:'Kyiv',x:95,y:22}]},
+    {n:'Belarus',         c:'#cc4422',ag:.28,r:[90,17,99,21], t:FO,ci:[{n:'Minsk',x:93,y:19}]},
+    {n:'Italy',           c:'#22aa22',ag:.28,r:[81,26,90,37], t:MT,ci:[{n:'Rome',x:85,y:31},{n:'Milan',x:82,y:27}]},
+    {n:'Malta',           c:'#cc3333',ag:.2, r:[84,35,86,37], t:PL,ci:[{n:'Valletta',x:85,y:36}]},
+    {n:'Russia',          c:'#884422',ag:.6, r:[93,3,158,24], t:TU,ci:[{n:'Moscow',x:98,y:18},{n:'Novosibirsk',x:122,y:18},{n:'Vladivostok',x:149,y:23}]},
+    {n:'Georgia',         c:'#cc8833',ag:.35,r:[99,27,105,30],t:MT,ci:[{n:'Tbilisi',x:101,y:28}]},
+    {n:'Armenia',         c:'#cc3333',ag:.35,r:[101,29,105,31],t:MT,ci:[{n:'Yerevan',x:102,y:30}]},
+    {n:'Azerbaijan',      c:'#3399cc',ag:.38,r:[103,27,108,31],t:MT,ci:[{n:'Baku',x:106,y:29}]},
+    // ── MIDDLE EAST ──
+    {n:'Turkey',          c:'#cc4400',ag:.38,r:[91,26,106,31],t:PL,ci:[{n:'Ankara',x:97,y:28},{n:'Istanbul',x:92,y:27}]},
+    {n:'Syria',           c:'#cc8833',ag:.4, r:[97,28,104,33],t:DE,ci:[{n:'Damascus',x:99,y:31}]},
+    {n:'Lebanon',         c:'#cc3333',ag:.38,r:[97,31,99,33], t:MT,ci:[{n:'Beirut',x:98,y:32}]},
+    {n:'Israel',          c:'#4488ff',ag:.5, r:[96,31,99,35], t:DE,ci:[{n:'Jerusalem',x:97,y:33}]},
+    {n:'Palestine',       c:'#00aa44',ag:.5, r:[96,33,98,35], t:DE,ci:[{n:'Ramallah',x:97,y:34}]},
+    {n:'Jordan',          c:'#cc8822',ag:.35,r:[98,31,103,37],t:DE,ci:[{n:'Amman',x:100,y:33}]},
+    {n:'Iraq',            c:'#cc7700',ag:.45,r:[99,29,108,38],t:DE,ci:[{n:'Baghdad',x:103,y:33}]},
+    {n:'Kuwait',          c:'#ddcc00',ag:.3, r:[104,34,107,37],t:DE,ci:[{n:'Kuwait City',x:105,y:35}]},
+    {n:'Iran',            c:'#aa5500',ag:.42,r:[103,25,117,37],t:DE,ci:[{n:'Tehran',x:108,y:29}]},
+    {n:'Saudi Arabia',    c:'#ddaa00',ag:.45,r:[97,34,112,47],t:DE,ci:[{n:'Riyadh',x:104,y:40}]},
+    {n:'Bahrain',         c:'#cc3333',ag:.28,r:[106,37,108,39],t:DE,ci:[{n:'Manama',x:107,y:38}]},
+    {n:'Qatar',           c:'#8b0000',ag:.3, r:[106,38,109,41],t:DE,ci:[{n:'Doha',x:107,y:39}]},
+    {n:'UAE',             c:'#00aa44',ag:.32,r:[107,38,112,42],t:DE,ci:[{n:'Abu Dhabi',x:109,y:40}]},
+    {n:'Oman',            c:'#cc4400',ag:.3, r:[108,38,117,47],t:DE,ci:[{n:'Muscat',x:113,y:40}]},
+    {n:'Yemen',           c:'#cc3300',ag:.45,r:[100,44,112,50],t:DE,ci:[{n:'Sanaa',x:104,y:46}]},
+    // ── CENTRAL ASIA ──
+    {n:'Kazakhstan',      c:'#aaaa44',ag:.3, r:[104,17,127,27],t:PL,ci:[{n:'Astana',x:114,y:22}]},
+    {n:'Uzbekistan',      c:'#ccaa44',ag:.35,r:[110,22,118,27],t:DE,ci:[{n:'Tashkent',x:114,y:24}]},
+    {n:'Turkmenistan',    c:'#88cc44',ag:.3, r:[107,27,118,32],t:DE,ci:[{n:'Ashgabat',x:112,y:29}]},
+    {n:'Tajikistan',      c:'#cc3344',ag:.38,r:[116,26,121,30],t:MT,ci:[{n:'Dushanbe',x:118,y:28}]},
+    {n:'Kyrgyzstan',      c:'#cc4422',ag:.35,r:[117,21,123,26],t:MT,ci:[{n:'Bishkek',x:119,y:23}]},
+    {n:'Afghanistan',     c:'#bb8833',ag:.5, r:[110,27,121,33],t:MT,ci:[{n:'Kabul',x:115,y:30}]},
+    {n:'Pakistan',        c:'#558833',ag:.4, r:[111,29,122,38],t:DE,ci:[{n:'Islamabad',x:116,y:30},{n:'Karachi',x:113,y:36}]},
+    // ── SOUTH ASIA ──
+    {n:'India',           c:'#ff8800',ag:.35,r:[111,30,128,52],t:FA,ci:[{n:'New Delhi',x:118,y:33},{n:'Mumbai',x:115,y:42},{n:'Chennai',x:120,y:46}]},
+    {n:'Nepal',           c:'#cc3333',ag:.3, r:[120,30,126,33],t:MT,ci:[{n:'Kathmandu',x:122,y:31}]},
+    {n:'Bhutan',          c:'#ff9900',ag:.25,r:[124,29,127,32],t:MT,ci:[{n:'Thimphu',x:125,y:30}]},
+    {n:'Bangladesh',      c:'#33bb44',ag:.35,r:[123,33,127,37],t:FA,ci:[{n:'Dhaka',x:125,y:35}]},
+    {n:'Sri Lanka',       c:'#ff6633',ag:.25,r:[119,50,123,55],t:FO,ci:[{n:'Colombo',x:120,y:52}]},
+    {n:'Maldives',        c:'#0077cc',ag:.2, r:[116,52,119,57],t:PL,ci:[{n:'Malé',x:117,y:53}]},
+    // ── SOUTHEAST ASIA ──
+    {n:'Myanmar',         c:'#aa7733',ag:.38,r:[125,31,132,44],t:FO,ci:[{n:'Naypyidaw',x:128,y:38}]},
+    {n:'Thailand',        c:'#4488bb',ag:.32,r:[127,38,134,48],t:FO,ci:[{n:'Bangkok',x:130,y:44}]},
+    {n:'Laos',            c:'#cc3333',ag:.33,r:[130,35,135,43],t:FO,ci:[{n:'Vientiane',x:132,y:40}]},
+    {n:'Cambodia',        c:'#cc4400',ag:.35,r:[130,43,135,48],t:FO,ci:[{n:'Phnom Penh',x:132,y:46}]},
+    {n:'Vietnam',         c:'#cc3333',ag:.38,r:[131,35,137,48],t:FO,ci:[{n:'Hanoi',x:133,y:37},{n:'Ho Chi Minh',x:133,y:47}]},
+    {n:'Malaysia',        c:'#cc6600',ag:.3, r:[129,47,140,53],t:FO,ci:[{n:'Kuala Lumpur',x:131,y:50}]},
+    {n:'Singapore',       c:'#3355cc',ag:.25,r:[130,52,133,54],t:PL,ci:[{n:'Singapore',x:131,y:53}]},
+    {n:'Brunei',          c:'#ffcc00',ag:.22,r:[136,47,139,50],t:FO,ci:[{n:'Bandar Seri Begawan',x:137,y:49}]},
+    {n:'Indonesia',       c:'#cc3333',ag:.38,r:[128,52,156,61],t:FO,ci:[{n:'Jakarta',x:133,y:56},{n:'Surabaya',x:137,y:56}]},
+    {n:'Timor-Leste',     c:'#cc4400',ag:.3, r:[143,57,148,60],t:MT,ci:[{n:'Dili',x:145,y:58}]},
+    {n:'Philippines',     c:'#3366cc',ag:.35,r:[140,37,151,48],t:FO,ci:[{n:'Manila',x:143,y:42}]},
+    // ── EAST ASIA ──
+    {n:'China',           c:'#dd2222',ag:.5, r:[119,17,149,38],t:PL,ci:[{n:'Beijing',x:136,y:23},{n:'Shanghai',x:140,y:29},{n:'Chengdu',x:130,y:30}]},
+    {n:'Mongolia',        c:'#ddaa44',ag:.3, r:[119,13,144,20],t:DE,ci:[{n:'Ulaanbaatar',x:132,y:17}]},
+    {n:'North Korea',     c:'#cc2222',ag:.8, r:[141,19,148,24],t:MT,ci:[{n:'Pyongyang',x:144,y:22}]},
+    {n:'South Korea',     c:'#3366cc',ag:.35,r:[142,22,148,26],t:PL,ci:[{n:'Seoul',x:144,y:23}]},
+    {n:'Japan',           c:'#ff4444',ag:.35,r:[145,17,156,30],t:PL,ci:[{n:'Tokyo',x:149,y:24},{n:'Osaka',x:148,y:26}]},
+    {n:'Taiwan',          c:'#44aacc',ag:.4, r:[140,29,144,33],t:MT,ci:[{n:'Taipei',x:141,y:30}]},
+    // ── AFRICA ──
+    {n:'Morocco',         c:'#cc5533',ag:.3, r:[72,29,81,38], t:DE,ci:[{n:'Rabat',x:76,y:33}]},
+    {n:'Algeria',         c:'#dd8833',ag:.38,r:[77,29,92,42], t:DE,ci:[{n:'Algiers',x:81,y:31}]},
+    {n:'Tunisia',         c:'#cc3333',ag:.32,r:[82,28,88,33], t:DE,ci:[{n:'Tunis',x:85,y:30}]},
+    {n:'Libya',           c:'#ddbb55',ag:.4, r:[85,28,97,40], t:DE,ci:[{n:'Tripoli',x:87,y:31}]},
+    {n:'Egypt',           c:'#ddaa22',ag:.38,r:[92,27,102,40],t:DE,ci:[{n:'Cairo',x:96,y:33}]},
+    {n:'Mauritania',      c:'#bb8833',ag:.3, r:[70,36,80,48], t:DE,ci:[{n:'Nouakchott',x:73,y:42}]},
+    {n:'Mali',            c:'#cc8844',ag:.35,r:[76,38,87,52], t:DE,ci:[{n:'Bamako',x:79,y:47}]},
+    {n:'Niger',           c:'#ddaa44',ag:.3, r:[84,37,96,50], t:DE,ci:[{n:'Niamey',x:87,y:44}]},
+    {n:'Chad',            c:'#cc9955',ag:.4, r:[88,38,98,52], t:SA,ci:[{n:"N'Djamena",x:90,y:45}]},
+    {n:'Sudan',           c:'#cc9955',ag:.38,r:[92,38,102,53],t:SA,ci:[{n:'Khartoum',x:96,y:44}]},
+    {n:'South Sudan',     c:'#448833',ag:.5, r:[94,50,102,57],t:SA,ci:[{n:'Juba',x:97,y:53}]},
+    {n:'Eritrea',         c:'#cc3333',ag:.45,r:[100,42,106,47],t:DE,ci:[{n:'Asmara',x:102,y:44}]},
+    {n:'Djibouti',        c:'#3366cc',ag:.3, r:[104,46,107,49],t:DE,ci:[{n:'Djibouti',x:105,y:47}]},
+    {n:'Ethiopia',        c:'#aa5500',ag:.33,r:[97,46,108,56],t:SA,ci:[{n:'Addis Ababa',x:101,y:50}]},
+    {n:'Somalia',         c:'#cc6622',ag:.5, r:[103,44,110,58],t:SA,ci:[{n:'Mogadishu',x:106,y:54}]},
+    {n:'Senegal',         c:'#3388cc',ag:.3, r:[69,43,75,49], t:SA,ci:[{n:'Dakar',x:70,y:45}]},
+    {n:'Guinea-Bissau',   c:'#44bb44',ag:.3, r:[69,47,73,50], t:SA,ci:[{n:'Bissau',x:70,y:48}]},
+    {n:'Guinea',          c:'#cc4400',ag:.35,r:[70,48,76,53], t:FO,ci:[{n:'Conakry',x:71,y:50}]},
+    {n:'Sierra Leone',    c:'#3366cc',ag:.32,r:[70,52,74,56], t:FO,ci:[{n:'Freetown',x:71,y:53}]},
+    {n:'Liberia',         c:'#cc3333',ag:.38,r:[72,52,77,57], t:FO,ci:[{n:'Monrovia',x:73,y:54}]},
+    {n:"Côte d'Ivoire",   c:'#ff6600',ag:.35,r:[74,49,82,56], t:FO,ci:[{n:'Yamoussoukro',x:77,y:52}]},
+    {n:'Ghana',           c:'#ffcc00',ag:.32,r:[78,48,84,55], t:SA,ci:[{n:'Accra',x:80,y:52}]},
+    {n:'Togo',            c:'#3388cc',ag:.3, r:[81,47,84,54], t:SA,ci:[{n:'Lomé',x:82,y:52}]},
+    {n:'Benin',           c:'#22aa44',ag:.32,r:[82,45,86,53], t:SA,ci:[{n:'Porto-Novo',x:83,y:50}]},
+    {n:'Nigeria',         c:'#228844',ag:.4, r:[82,45,93,56], t:SA,ci:[{n:'Abuja',x:86,y:50},{n:'Lagos',x:84,y:52}]},
+    {n:'Burkina Faso',    c:'#cc4400',ag:.35,r:[78,44,86,49], t:SA,ci:[{n:'Ouagadougou',x:81,y:46}]},
+    {n:'Cameroon',        c:'#336633',ag:.32,r:[86,49,94,58], t:FO,ci:[{n:'Yaoundé',x:89,y:53}]},
+    {n:'Equatorial Guinea',c:'#3388cc',ag:.28,r:[85,56,89,59],t:FO,ci:[{n:'Malabo',x:86,y:57}]},
+    {n:'Gabon',           c:'#3399aa',ag:.3, r:[84,56,90,63], t:FO,ci:[{n:'Libreville',x:86,y:58}]},
+    {n:'Rep. Congo',      c:'#cc3300',ag:.35,r:[87,57,94,65], t:FO,ci:[{n:'Brazzaville',x:90,y:61}]},
+    {n:'DR Congo',        c:'#224422',ag:.35,r:[88,54,101,68],t:FO,ci:[{n:'Kinshasa',x:91,y:61}]},
+    {n:'Central African Rep.',c:'#cc9922',ag:.4,r:[88,49,98,57],t:SA,ci:[{n:'Bangui',x:92,y:53}]},
+    {n:'Rwanda',          c:'#3399cc',ag:.4, r:[97,58,100,61],t:MT,ci:[{n:'Kigali',x:98,y:59}]},
+    {n:'Burundi',         c:'#cc3333',ag:.42,r:[97,60,100,63],t:MT,ci:[{n:'Bujumbura',x:98,y:61}]},
+    {n:'Uganda',          c:'#ffcc00',ag:.38,r:[97,54,103,60],t:FO,ci:[{n:'Kampala',x:99,y:57}]},
+    {n:'Kenya',           c:'#55aa44',ag:.32,r:[100,50,108,59],t:SA,ci:[{n:'Nairobi',x:102,y:54}]},
+    {n:'Tanzania',        c:'#448833',ag:.3, r:[96,58,106,68],t:SA,ci:[{n:'Dodoma',x:100,y:62}]},
+    {n:'Mozambique',      c:'#77aa44',ag:.3, r:[97,63,104,78],t:SA,ci:[{n:'Maputo',x:100,y:74}]},
+    {n:'Malawi',          c:'#cc3366',ag:.3, r:[99,63,103,70],t:FO,ci:[{n:'Lilongwe',x:100,y:66}]},
+    {n:'Zambia',          c:'#88bb33',ag:.28,r:[92,62,100,71],t:SA,ci:[{n:'Lusaka',x:96,y:66}]},
+    {n:'Zimbabwe',        c:'#99cc44',ag:.3, r:[93,69,101,74],t:SA,ci:[{n:'Harare',x:96,y:71}]},
+    {n:'Angola',          c:'#cc7722',ag:.35,r:[87,62,96,74], t:SA,ci:[{n:'Luanda',x:89,y:65}]},
+    {n:'Namibia',         c:'#cc8833',ag:.28,r:[87,72,97,81], t:DE,ci:[{n:'Windhoek',x:91,y:76}]},
+    {n:'Botswana',        c:'#aabb55',ag:.28,r:[91,72,99,80], t:SA,ci:[{n:'Gaborone',x:95,y:77}]},
+    {n:'South Africa',    c:'#336633',ag:.3, r:[87,76,104,89],t:SA,ci:[{n:'Pretoria',x:96,y:79},{n:'Cape Town',x:90,y:86}]},
+    {n:'Lesotho',         c:'#3366cc',ag:.22,r:[96,81,100,83],t:MT,ci:[{n:'Maseru',x:97,y:82}]},
+    {n:'Eswatini',        c:'#3388cc',ag:.22,r:[99,78,102,81],t:FO,ci:[{n:'Mbabane',x:100,y:79}]},
+    {n:'Madagascar',      c:'#aa6633',ag:.28,r:[104,59,110,75],t:FO,ci:[{n:'Antananarivo',x:107,y:66}]},
+    {n:'Seychelles',      c:'#3399cc',ag:.2, r:[109,52,113,56],t:PL,ci:[{n:'Victoria',x:110,y:53}]},
+    {n:'Comoros',         c:'#3388cc',ag:.25,r:[104,58,108,61],t:PL,ci:[{n:'Moroni',x:106,y:59}]},
+    {n:'Mauritius',       c:'#3366cc',ag:.22,r:[112,68,116,71],t:PL,ci:[{n:'Port Louis',x:113,y:69}]},
+    {n:'Cape Verde',      c:'#3355aa',ag:.2, r:[63,43,67,47], t:PL,ci:[{n:'Praia',x:64,y:45}]},
+    {n:'São Tomé & Prínc.',c:'#44aa33',ag:.2,r:[83,56,86,59], t:PL,ci:[{n:'São Tomé',x:84,y:57}]},
+    // ── OCEANIA ──
+    {n:'Australia',       c:'#cc6600',ag:.28,r:[126,57,156,84],t:DE,ci:[{n:'Canberra',x:147,y:74},{n:'Sydney',x:148,y:73},{n:'Melbourne',x:146,y:76},{n:'Perth',x:130,y:72}]},
+    {n:'New Zealand',     c:'#3366cc',ag:.22,r:[152,74,159,84],t:FO,ci:[{n:'Wellington',x:155,y:78},{n:'Auckland',x:155,y:75}]},
+    {n:'Papua New Guinea',c:'#886622',ag:.32,r:[143,51,156,58],t:FO,ci:[{n:'Port Moresby',x:149,y:55}]},
+    {n:'Fiji',            c:'#3388bb',ag:.25,r:[155,62,159,66],t:FO,ci:[{n:'Suva',x:156,y:63}]},
+    {n:'Solomon Islands', c:'#3399aa',ag:.25,r:[153,55,159,60],t:FO,ci:[{n:'Honiara',x:155,y:57}]},
+    {n:'Vanuatu',         c:'#44bb55',ag:.22,r:[153,61,157,66],t:FO,ci:[{n:'Port Vila',x:154,y:63}]},
+    {n:'Samoa',           c:'#3355bb',ag:.2, r:[0,60,4,63],   t:PL,ci:[{n:'Apia',x:1,y:61}]},
+    {n:'Tonga',           c:'#cc3333',ag:.2, r:[0,63,4,67],   t:PL,ci:[{n:"Nuku'alofa",x:1,y:65}]},
+  ];
+  W.forEach(s=>{const id=addC(s.n,s.c,{ag:s.ag,ai:true,ly:.65+Math.random()*.3});const[c1,r1,c2,r2]=s.r;fr(c1,r1,c2,r2,s.t,id);(s.ci||[]).forEach(({n,x,y},i)=>{if(x<COLS&&y<ROWS)ac(x,y,n,id,i===0);});});
+}
+
+function buildEurope(){
+  // Europe map fills entire 160x100 grid
+  // Calibration: UK≈(28,18), Spain≈(22,38), Norway tip≈(44,4), Greece≈(64,50), Moscow≈(96,18)
+  // Iceland far left, Turkey bottom-right, Scandinavia top-center
+  const E=[
+    // ── FAR NORTH / ISLANDS ──
+    {n:'Iceland',       c:'#99bbcc',ag:.18,r:[4,6,14,14],   t:SN,ci:[{n:'Reykjavik',x:7,y:10}]},
+    // ── SCANDINAVIA ──
+    {n:'Norway',        c:'#cc3333',ag:.22,r:[38,4,52,22],  t:MT,ci:[{n:'Oslo',x:43,y:18},{n:'Bergen',x:39,y:14}]},
+    {n:'Sweden',        c:'#3366ff',ag:.22,r:[50,4,60,24],  t:FO,ci:[{n:'Stockholm',x:54,y:18},{n:'Gothenburg',x:50,y:22}]},
+    {n:'Finland',       c:'#3399ff',ag:.2, r:[58,4,72,22],  t:FO,ci:[{n:'Helsinki',x:62,y:18}]},
+    {n:'Denmark',       c:'#cc3333',ag:.22,r:[48,20,56,26], t:PL,ci:[{n:'Copenhagen',x:52,y:23}]},
+    // ── BRITISH ISLES ──
+    {n:'UK',            c:'#cc3333',ag:.3, r:[24,14,36,28], t:FO,ci:[{n:'London',x:30,y:24},{n:'Edinburgh',x:28,y:16},{n:'Manchester',x:28,y:20}]},
+    {n:'Ireland',       c:'#22aa44',ag:.22,r:[18,16,25,26], t:FO,ci:[{n:'Dublin',x:21,y:21}]},
+    // ── WESTERN EUROPE ──
+    {n:'Portugal',      c:'#cc3333',ag:.28,r:[16,36,22,48], t:PL,ci:[{n:'Lisbon',x:18,y:43}]},
+    {n:'Spain',         c:'#ffaa00',ag:.3, r:[18,30,40,48], t:PL,ci:[{n:'Madrid',x:26,y:38},{n:'Barcelona',x:36,y:34},{n:'Seville',x:20,y:44}]},
+    {n:'France',        c:'#0044cc',ag:.32,r:[30,24,50,38], t:FA,ci:[{n:'Paris',x:37,y:27},{n:'Lyon',x:40,y:33},{n:'Marseille',x:40,y:37}]},
+    {n:'Netherlands',   c:'#ff8800',ag:.26,r:[44,20,52,26], t:PL,ci:[{n:'Amsterdam',x:47,y:22}]},
+    {n:'Belgium',       c:'#ffcc00',ag:.25,r:[44,24,50,28], t:PL,ci:[{n:'Brussels',x:46,y:26}]},
+    {n:'Luxembourg',    c:'#ff4488',ag:.18,r:[48,27,52,30], t:PL,ci:[{n:'Luxembourg',x:50,y:28}]},
+    // ── CENTRAL EUROPE ──
+    {n:'Germany',       c:'#666666',ag:.3, r:[48,18,62,30], t:PL,ci:[{n:'Berlin',x:56,y:20},{n:'Munich',x:54,y:28},{n:'Hamburg',x:52,y:18}]},
+    {n:'Switzerland',   c:'#cc0000',ag:.18,r:[48,30,56,36], t:MT,ci:[{n:'Bern',x:51,y:32},{n:'Zurich',x:53,y:31}]},
+    {n:'Austria',       c:'#cc3333',ag:.24,r:[54,28,64,34], t:MT,ci:[{n:'Vienna',x:60,y:30}]},
+    {n:'Czech Rep.',    c:'#3366cc',ag:.25,r:[54,22,64,28], t:PL,ci:[{n:'Prague',x:57,y:24}]},
+    {n:'Slovakia',      c:'#3388cc',ag:.24,r:[62,26,70,30], t:PL,ci:[{n:'Bratislava',x:63,y:28}]},
+    {n:'Poland',        c:'#ee3333',ag:.28,r:[56,14,76,24], t:PL,ci:[{n:'Warsaw',x:65,y:18},{n:'Krakow',x:64,y:22}]},
+    {n:'Hungary',       c:'#cc4400',ag:.28,r:[60,30,72,36], t:PL,ci:[{n:'Budapest',x:64,y:32}]},
+    // ── SOUTHERN EUROPE ──
+    {n:'Italy',         c:'#22aa22',ag:.28,r:[48,34,68,56], t:MT,ci:[{n:'Rome',x:56,y:44},{n:'Milan',x:50,y:34},{n:'Naples',x:58,y:50}]},
+    {n:'Slovenia',      c:'#44bb44',ag:.22,r:[56,34,62,38], t:MT,ci:[{n:'Ljubljana',x:58,y:36}]},
+    {n:'Croatia',       c:'#cc3366',ag:.28,r:[56,36,66,42], t:FO,ci:[{n:'Zagreb',x:59,y:37},{n:'Split',x:60,y:41}]},
+    {n:'Bosnia',        c:'#cc5544',ag:.35,r:[58,40,66,44], t:MT,ci:[{n:'Sarajevo',x:62,y:42}]},
+    {n:'Serbia',        c:'#cc3333',ag:.35,r:[62,38,70,44], t:PL,ci:[{n:'Belgrade',x:65,y:40}]},
+    {n:'Montenegro',    c:'#cc4455',ag:.3, r:[62,42,68,46], t:MT,ci:[{n:'Podgorica',x:64,y:44}]},
+    {n:'Albania',       c:'#cc3333',ag:.32,r:[62,44,68,50], t:MT,ci:[{n:'Tirana',x:64,y:47}]},
+    {n:'North Macedonia',c:'#ddaa22',ag:.3,r:[66,44,72,48], t:MT,ci:[{n:'Skopje',x:68,y:46}]},
+    {n:'Romania',       c:'#3399ff',ag:.3, r:[66,30,80,40], t:PL,ci:[{n:'Bucharest',x:72,y:36},{n:'Cluj',x:68,y:32}]},
+    {n:'Bulgaria',      c:'#cc6600',ag:.28,r:[66,40,78,46], t:PL,ci:[{n:'Sofia',x:68,y:42},{n:'Varna',x:76,y:42}]},
+    {n:'Greece',        c:'#3366ff',ag:.3, r:[62,48,76,60], t:MT,ci:[{n:'Athens',x:67,y:54},{n:'Thessaloniki',x:66,y:49}]},
+    // ── EASTERN EUROPE ──
+    {n:'Estonia',       c:'#3399ff',ag:.2, r:[62,10,70,14], t:FO,ci:[{n:'Tallinn',x:65,y:12}]},
+    {n:'Latvia',        c:'#bb3333',ag:.22,r:[62,13,70,17], t:FO,ci:[{n:'Riga',x:65,y:15}]},
+    {n:'Lithuania',     c:'#ffcc00',ag:.22,r:[62,16,70,20], t:FO,ci:[{n:'Vilnius',x:66,y:18}]},
+    {n:'Belarus',       c:'#cc4422',ag:.28,r:[68,16,82,24], t:FO,ci:[{n:'Minsk',x:74,y:19}]},
+    {n:'Ukraine',       c:'#3399ff',ag:.3, r:[68,22,96,34], t:FA,ci:[{n:'Kyiv',x:76,y:24},{n:'Kharkiv',x:82,y:24},{n:'Odesa',x:78,y:32}]},
+    {n:'Moldova',       c:'#cc7733',ag:.26,r:[76,32,82,36], t:FA,ci:[{n:'Chișinău',x:78,y:34}]},
+    // ── RUSSIA (European part) ──
+    {n:'Russia',        c:'#884422',ag:.5, r:[68,4,130,22], t:TU,ci:[{n:'Moscow',x:84,y:16},{n:'St Petersburg',x:76,y:10},{n:'Kazan',x:96,y:16}]},
+    // ── NEAR EAST (edge of map) ──
+    {n:'Turkey',        c:'#cc4400',ag:.38,r:[72,52,110,62],t:PL,ci:[{n:'Istanbul',x:76,y:54},{n:'Ankara',x:84,y:56},{n:'Izmir',x:76,y:57}]},
+    {n:'Georgia',       c:'#cc6633',ag:.3, r:[92,46,100,52],t:MT,ci:[{n:'Tbilisi',x:95,y:49}]},
+    {n:'Armenia',       c:'#bb4433',ag:.32,r:[96,50,102,54],t:MT,ci:[{n:'Yerevan',x:98,y:52}]},
+    {n:'Azerbaijan',    c:'#3399ff',ag:.35,r:[100,48,108,54],t:PL,ci:[{n:'Baku',x:104,y:50}]},
+    {n:'Syria',         c:'#cc8833',ag:.4, r:[88,60,100,66],t:DE,ci:[{n:'Damascus',x:92,y:63}]},
+    {n:'Lebanon',       c:'#cc4444',ag:.38,r:[88,58,92,62], t:MT,ci:[{n:'Beirut',x:90,y:60}]},
+    {n:'Israel',        c:'#4488ff',ag:.5, r:[84,60,90,66], t:DE,ci:[{n:'Jerusalem',x:86,y:63}]},
+    {n:'Cyprus',        c:'#ffbb00',ag:.22,r:[80,56,88,60], t:PL,ci:[{n:'Nicosia',x:84,y:58}]},
+    // ── NORTH AFRICA (edge) ──
+    {n:'Morocco',       c:'#cc5533',ag:.3, r:[10,52,24,66], t:DE,ci:[{n:'Rabat',x:14,y:57}]},
+    {n:'Algeria',       c:'#dd8833',ag:.38,r:[22,52,52,70], t:DE,ci:[{n:'Algiers',x:30,y:55}]},
+    {n:'Tunisia',       c:'#dd6644',ag:.32,r:[46,52,54,62], t:DE,ci:[{n:'Tunis',x:50,y:55}]},
+    {n:'Libya',         c:'#ddbb55',ag:.4, r:[50,52,74,68], t:DE,ci:[{n:'Tripoli',x:56,y:56}]},
+    {n:'Egypt',         c:'#ddaa22',ag:.38,r:[74,56,90,70], t:DE,ci:[{n:'Cairo',x:80,y:60}]},
+  ];
+  E.forEach(s=>{const id=addC(s.n,s.c,{ag:s.ag,ai:true,ly:.65+Math.random()*.3});const[c1,r1,c2,r2]=s.r;fr(c1,r1,c2,r2,s.t,id);(s.ci||[]).forEach(({n,x,y},i)=>{if(x<COLS&&y<ROWS)ac(x,y,n,id,i===0);});});
+}
+
+function buildFantasy(){
+  const cols=['#cc3333','#3355cc','#22aa44','#cc8833','#9922cc','#22aacc','#cc2288','#cc9900','#ee4400','#5588cc'];
+  const tts=[PL,FO,MT,DE,SW,FA,SN];
+  const blobs=[{cx:40,cy:40,rx:28,ry:22},{cx:100,cy:35,rx:32,ry:25},{cx:70,cy:68,rx:26,ry:20},{cx:130,cy:58,rx:30,ry:20},{cx:30,cy:72,rx:20,ry:16},{cx:118,cy:78,rx:23,ry:16}];
+  blobs.forEach(b=>{fe(b.cx,b.cy,b.rx,b.ry,PL,-1);for(let i=0;i<7;i++){const ox=(Math.random()-.5)*b.rx*.8|0,oy=(Math.random()-.5)*b.ry*.8|0;fe(b.cx+ox,b.cy+oy,b.rx*.3+3|0,b.ry*.3+2|0,tts[Math.random()*tts.length|0],-1);}});
+  const NATIONS=[{n:'Valdoria',c:cols[0],ag:.55},{n:'Aethermoor',c:cols[1],ag:.32},{n:'Ironheim',c:cols[2],ag:.48},{n:'Sunspire',c:cols[3],ag:.4},{n:'Shadowfen',c:cols[4],ag:.6},{n:'Crystalhaven',c:cols[5],ag:.28},{n:'Emberpeak',c:cols[6],ag:.5},{n:'Goldmarch',c:cols[7],ag:.38},{n:'Frosthold',c:cols[8],ag:.35},{n:'Thornwall',c:cols[9],ag:.45}];
+  NATIONS.forEach((nation,i)=>{const id=addC(nation.n,nation.c,{ag:nation.ag,ai:true,ly:.55+Math.random()*.35});const blob=blobs[i%blobs.length];const ox=(Math.random()-.5)*blob.rx*.6|0,oy=(Math.random()-.5)*blob.ry*.6|0;fe(blob.cx+ox,blob.cy+oy,blob.rx*.42|0,blob.ry*.42|0,PL,id);ac(blob.cx+ox,blob.cy+oy,CN[i],id,true);});
+}
+
+// ── SEA LANES ──
+const SEA_LANES=[
+  {name:'Atlantic',    pts:[[52,20],[48,28],[44,36],[42,44],[40,52],[38,60]]},
+  {name:'Pacific',     pts:[[8,20],[6,35],[5,50],[6,65],[8,75]]},
+  {name:'PacificEast', pts:[[155,25],[158,40],[157,55],[155,65]]},
+  {name:'IndianOcean', pts:[[105,58],[110,65],[116,68],[122,65],[128,60]]},
+  {name:'Mediterranean',pts:[[76,38],[82,36],[90,36],[98,38],[106,40]]},
+  {name:'Arctic',      pts:[[60,4],[50,3],[40,3],[30,4],[20,5]]},
+  {name:'CapeRoute',   pts:[[42,80],[58,88],[72,88],[86,84],[98,78]]},
+];
+
+// ── COAST CACHE ──
+// Rebuilt only when tiles change (map load, conquest, revolt)
+// Maps cid -> [{col,row}]  or  cid -> false (landlocked)
+let coastCache={};
+let coastDirty=true; // set true whenever owner[] changes significantly
+
+function dirtyCoast(){coastDirty=true;}
+
+function rebuildCoastCache(){
+  coastCache={};
+  // Build per-country coast lists in one O(N) pass
+  const tmp={};
+  for(let row=0;row<ROWS;row++){
+    for(let col=0;col<COLS;col++){
+      const idx=row*COLS+col;
+      const cid=owner[idx];
+      if(cid<0||grid[idx]===O)continue;
+      // check 4 neighbours for ocean
+      let adj=false;
+      if(col>0      && grid[idx-1]===O)adj=true;
+      if(!adj&&col<COLS-1 && grid[idx+1]===O)adj=true;
+      if(!adj&&row>0      && grid[idx-COLS]===O)adj=true;
+      if(!adj&&row<ROWS-1 && grid[idx+COLS]===O)adj=true;
+      if(adj){
+        if(!tmp[cid])tmp[cid]=[];
+        // Only store every 3rd tile to keep arrays small
+        if((row+col)%3===0)tmp[cid].push({col,row});
+      }
+    }
+  }
+  countries.forEach(c=>{coastCache[c.id]=tmp[c.id]||null;});
+  coastDirty=false;
+}
+
+function getCoast(cid){
+  if(coastDirty)rebuildCoastCache();
+  return coastCache[cid]||[];
+}
+
+function isCoastal(cid){
+  if(coastDirty)rebuildCoastCache();
+  return !!(coastCache[cid]&&coastCache[cid].length>0);
+}
+
+// Nearest sea-lane waypoint to a grid position
+function nearestLanePoint(col,row){
+  let best=null,bd=Infinity;
+  for(const lane of SEA_LANES){
+    for(const[lc,lr] of lane.pts){
+      const d=Math.abs(lc-col)+Math.abs(lr-row);
+      if(d<bd){bd=d;best={lane,lc,lr};}
+    }
+  }
+  return best;
+}
+
+// Can two countries fight across water?
+function canNavalAttack(attId,defId){
+  return isCoastal(attId)&&isCoastal(defId);
+}
+
+// Launch a fleet
+function launchFleet(attId,defId){
+  const ac2=getCoast(attId),dc=getCoast(defId);
+  if(!ac2.length||!dc.length)return;
+  const origin=ac2[Math.random()*ac2.length|0];
+  const dest  =dc  [Math.random()*dc.length|0];
+  const lp =nearestLanePoint(origin.col,origin.row);
+  const lp2=nearestLanePoint(dest.col,dest.row);
+  const waypts=[[origin.col,origin.row]];
+  if(lp) waypts.push([lp.lc,lp.lr]);
+  if(lp&&lp2&&lp.lane===lp2.lane){
+    lp.lane.pts.forEach(p=>waypts.push(p));
+  } else {
+    waypts.push([80,50]); // mid-ocean crossover
+  }
+  if(lp2)waypts.push([lp2.lc,lp2.lr]);
+  waypts.push([dest.col,dest.row]);
+  fleets.push({attId,defId,waypts,wpIdx:0,x:origin.col,y:origin.row,arrived:false,age:0});
+  addEv(`⛵ ${countries[attId].name} launches navy → ${countries[defId].name}`,'ld');
+  ticker2(`⛵ ${countries[attId].name} sails to attack ${countries[defId].name}!`);
+}
+
+// Advance fleets one step
+function stepFleets(){
+  fleets=fleets.filter(f=>{
+    f.age++;
+    if(f.arrived||f.age>400)return false;
+    const wp=f.waypts[Math.min(f.wpIdx,f.waypts.length-1)];
+    const dx=wp[0]-f.x,dy=wp[1]-f.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<1.5){
+      f.wpIdx++;
+      if(f.wpIdx>=f.waypts.length){
+        f.arrived=true;
+        if(countries[f.attId]&&countries[f.defId]){
+          const dup=wars.some(w=>!w.done&&
+            ((w.attId===f.attId&&w.defId===f.defId)||
+             (w.attId===f.defId&&w.defId===f.attId)));
+          if(!dup){
+            const aS=getStatsRaw(f.attId),dS=getStatsRaw(f.defId);
+            if(aS&&dS){
+              wars.push({attId:f.attId,defId:f.defId,round:0,done:false,
+                attHp:aS.mhp*.7|0,defHp:dS.mhp,
+                attMaxHp:aS.mhp*.7|0,defMaxHp:dS.mhp,
+                fx:f.x|0,fy:f.y|0,naval:true});
+              addEv(`⚓ ${countries[f.attId].name} lands on ${countries[f.defId].name}!`,'ld');
+              ticker2(`⚓ NAVAL LANDING: ${countries[f.attId].name} invades ${countries[f.defId].name}!`);
+            }
+          }
+        }
+        return false;
+      }
+    } else {
+      f.x+=dx/dist*1.4;
+      f.y+=dy/dist*1.4;
+    }
+    return true;
+  });
+}
+
+// ── STATS ──
+// getStatsRaw: fast single-pass, no coastCheck (used in hot loops)
+function getStatsRaw(cid){
+  const c=countries[cid];if(!c)return null;
+  let area=0,aS=0,dS=0,pS=0;
+  for(let i=0;i<owner.length;i++){
+    if(owner[i]!==cid)continue;
+    area++;
+    const t=TR[grid[i]];aS+=t.a;dS+=t.d;pS+=t.p;
+  }
+  const cb=cities.filter(x=>x.cid===cid).length;
+
+  // Economy modifiers — gold funds armies, population provides manpower
+  const gold=c.gold||0;
+  const pop =c.pop ||1;
+  // Gold bonus: +1 atk/def per 200 gold (capped at +20 each so huge stockpiles don't dominate)
+  const goldAtk=Math.min(20, gold/200)|0;
+  const goldDef=Math.min(20, gold/200)|0;
+  // Population bonus: each 100k pop = +1 atk, +0.5 def, +5 max-hp
+  const popAtk =(pop/100)|0;
+  const popDef =(pop/200)|0;
+  const popHp  =(pop/20) |0;
+
+  const atk=Math.max(2,(area*.18+aS+cb*2+goldAtk+popAtk)|0);
+  const def=Math.max(0,(area*.1 +dS+cb  +goldDef+popDef)|0);
+  const mhp=Math.max(10,((area*.5+pS+cb*5)*2+area*2+cb*20+popHp)|0);
+  return{name:c.name,color:c.color,area,atk,def,mhp,id:cid,cb,
+         loyalty:c.loyalty||.7,gold,pop,morale:c.morale||1};
+}
+
+// getStats: full version with coastal flag (used in UI only)
+function getStats(cid){
+  const s=getStatsRaw(cid);if(!s)return null;
+  s.coastal=isCoastal(cid);
+  return s;
+}
+
+function battleH(){const opts=countries.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');return`<div style="margin-bottom:6px"><div class="hpbg"><div class="hpf" id="hpa" style="width:100%;background:#cc1111"></div></div><div style="font-size:.6rem;color:#ff7755;margin-bottom:4px" id="hpalbl">–</div><div class="hpbg"><div class="hpf" id="hpd" style="width:100%;background:#4488ff"></div></div><div style="font-size:.6rem;color:#88bbff" id="hpdlbl">–</div></div><div class="cgrd"><div><div class="clbl">ATTACKER</div><select class="selb" id="sel-a">${opts}</select></div><div class="vsb">VS</div><div><div class="clbl">DEFENDER</div><select class="selb" id="sel-d">${opts}</select></div></div><div class="blog" id="blog"><div class="li">Select countries and press BATTLE!</div></div><button class="btn bfight" id="fbtn" onclick="startBattle()">⚔️ BATTLE!</button><button class="btn bsec" onclick="resetBattle()">↩ RESET</button>`;}
+function fillSels(){['sel-a','sel-d'].forEach((id,si)=>{const el=document.getElementById(id);if(!el)return;el.innerHTML=countries.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');if(si===1&&countries.length>1)el.selectedIndex=1;});}
+function refreshStats(){
+  const aid=+document.getElementById('sel-a')?.value,did=+document.getElementById('sel-d')?.value;
+  const el=document.getElementById('sbody');if(!el)return;
+  function sb(lbl,s){
+    if(!s)return`<div style="color:var(--dim);margin-bottom:5px">${lbl}: no territory</div>`;
+    const cap=cities.find(c=>c.cid===s.id&&c.isCapital);
+    const activeWar=wars.find(w=>!w.done&&(w.attId===s.id||w.defId===s.id));
+    const warExh=activeWar?(s.id===activeWar.attId?activeWar.attExhaustion:activeWar.defExhaustion)||0:0;
+    const warMor=activeWar?(s.id===activeWar.attId?activeWar.attMorale:activeWar.defMorale)||1:s.morale;
+    const moraleBar=Math.min(100,(warMor/1.3*100))|0;
+    const goldBar=Math.min(100,s.gold/5)|0;
+    const popBar =Math.min(100,s.pop/20)|0;
+    const moraleColor=moraleBar>60?'#44cc88':moraleBar>30?'#f0b930':'#cc3333';
+    return`<div class="sblk">
+      <div class="stit">${lbl}: ${s.name}</div>
+      <div class="smin">
+        ${cap?`★ Capital: <b style="color:#f0b930">${cap.name}</b><br>`:'⚠️ <b style="color:#ff4444">No Capital!</b><br>'}
+        ⚔️ Atk:<b>${s.atk}</b> 🛡️ Def:<b>${s.def}</b> ❤️ HP:<b>${s.mhp}</b><br>
+        🗺️ <b>${s.area}</b> tiles 🏙️ <b>${s.cb}</b> cities ${s.coastal?'⛵ <b style="color:#55aaff">Coastal</b>':'🏔️ Landlocked'}<br>
+        😤 Morale: <b style="color:${moraleColor}">${moraleBar}%</b>${activeWar?` · 😩 Exhaustion: <b>${(warExh*100|0)}%</b>`:''}
+        <div style="height:5px;background:#050300;border-radius:2px;margin:2px 0 4px">
+          <div style="height:100%;width:${moraleBar}%;background:${moraleColor};border-radius:2px;transition:width .4s"></div>
+        </div>
+        💰 Gold: <b>${s.gold}</b>
+        <div style="height:5px;background:#050300;border-radius:2px;margin:2px 0 4px">
+          <div style="height:100%;width:${goldBar}%;background:#f0b930;border-radius:2px"></div>
+        </div>
+        👥 Pop: <b>${s.pop}k</b>
+        <div style="height:5px;background:#050300;border-radius:2px;margin:2px 0">
+          <div style="height:100%;width:${popBar}%;background:#44cc88;border-radius:2px"></div>
+        </div>
+      </div>
+    </div>`;
+  }
+  el.innerHTML=sb('Attacker',isNaN(aid)?null:getStats(aid))+sb('Defender',isNaN(did)?null:getStats(did));
+}
+function bLog(html,cls){const el=document.getElementById('blog');if(!el)return;const d=document.createElement('div');d.className=cls;d.innerHTML=html;el.appendChild(d);el.scrollTop=el.scrollHeight;}
+function setH(w,hp,mhp,name,color){const f=document.getElementById('hp'+w);if(f){f.style.width=Math.max(0,hp/mhp*100)+'%';f.style.background=color;}const l=document.getElementById('hp'+w+'lbl');if(l)l.textContent=`${name}: ${Math.max(0,hp)}/${mhp}`;}
+function startBattle(){if(manTimer)return;const aid=+document.getElementById('sel-a').value,did=+document.getElementById('sel-d').value;if(aid===did){alert('Pick two different!');return;}const aS=getStats(aid),dS=getStats(did);if(!aS||aS.area<1){alert(countries[aid]?.name+' needs territory!');return;}if(!dS||dS.area<1){alert(countries[did]?.name+' needs territory!');return;}document.getElementById('fbtn').disabled=true;document.getElementById('blog').innerHTML='';bLog(`🔔 <b>${aS.name}</b> vs <b>${dS.name}</b>`,'li');let aH=aS.mhp,dH=dS.mhp,rnd=0;setH('a',aH,aS.mhp,aS.name,aS.color);setH('d',dH,dS.mhp,dS.name,dS.color);manTimer=setInterval(()=>{rnd++;const aD=Math.max(1,(aS.atk+rng(aS.atk*.6)-Math.max(0,dS.def*1.15+rng(dS.def*.3)))|0);const dD=Math.max(1,(dS.atk*1.15+rng(dS.atk*.6)-Math.max(0,aS.def+rng(aS.def*.3)))|0);dH-=aD;aH-=dD;bLog(`R${rnd} ⚔️-${aD} 🛡️-${dD}`,'la');setH('a',aH,aS.mhp,aS.name,aS.color);setH('d',dH,dS.mhp,dS.name,dS.color);if(dH<=0||aH<=0){clearInterval(manTimer);manTimer=null;document.getElementById('fbtn').disabled=false;if(dH<=0&&aH<=0)bLog('💀 Mutual destruction!','lw');else if(dH<=0){bLog(`🏆 ${aS.name} WINS!`,'lw');capFull(dS.id,aS.id);}else bLog(`🏆 ${dS.name} WINS!`,'lw');}},280);}
+function resetBattle(){clearInterval(manTimer);manTimer=null;document.getElementById('fbtn').disabled=false;const bl=document.getElementById('blog');if(bl)bl.innerHTML='<div class="li">Select countries and press BATTLE!</div>';['a','d'].forEach(w=>{const f=document.getElementById('hp'+w);if(f)f.style.width='100%';const l=document.getElementById('hp'+w+'lbl');if(l)l.textContent='–';});}
+function capFull(from,to){for(let i=0;i<owner.length;i++)if(owner[i]===from)owner[i]=to;cities.forEach(c=>{if(c.cid===from){c.cid=to;if(countries[to])c.color=countries[to].color;}});dirtyCoast();redraw();rclList();}
+function rng(range){return(Math.random()-.5)*range;}
+
+// ── ALLIANCE ENGINE ──
+let allianceIdSeq=0;
+const AL_NAMES=['Pact','Coalition','League','Alliance','Union','Accord','Treaty','Bloc','Order','Compact'];
+const AL_COLORS=['#ffaa00','#44aaff','#aa44ff','#ff44aa','#44ffaa','#ff8844','#44ffff','#ffff44','#ff4444','#88ff44'];
+
+function getAlliance(cid){return alliances.find(al=>al.members.includes(cid))||null;}
+
+function formAlliance(cids,name){
+  // Don't allow two members who are at war with each other
+  const validMembers=cids.filter(cid=>countries[cid]&&countT(cid)>0);
+  if(validMembers.length<2)return null;
+  const color=AL_COLORS[allianceIdSeq%AL_COLORS.length];
+  const al={id:allianceIdSeq++,name:name||`${countries[validMembers[0]].name} ${AL_NAMES[Math.random()*AL_NAMES.length|0]}`,members:[...validMembers],color};
+  alliances.push(al);
+  addEv(`🤝 ${al.name} formed: ${validMembers.map(c=>countries[c]?.name).join(', ')}`,'ld');
+  ticker2(`🤝 ${al.name} — new alliance!`);
+  return al;
+}
+
+function dissolveAlliance(alId){
+  const idx=alliances.findIndex(a=>a.id===alId);
+  if(idx<0)return;
+  addEv(`💔 ${alliances[idx].name} dissolved`,'li');
+  alliances.splice(idx,1);
+  refreshAlliancePanel();
+}
+
+// Player-triggered full demolish with confirmation
+function demolishAlliance(alId){
+  const al=alliances.find(a=>a.id===alId);
+  if(!al)return;
+  if(!confirm(`Demolish the ${al.name}? All member nations will become unallied.`))return;
+  dissolveAlliance(alId);
+  if(mode==='events')refreshEUI();
+}
+
+// Kick a single member out of an alliance
+function kickFromAlliance(alId,cid){
+  const al=alliances.find(a=>a.id===alId);
+  if(!al)return;
+  const c=countries[cid];
+  if(!c)return;
+  al.members=al.members.filter(m=>m!==cid);
+  addEv(`🚪 ${c.name} removed from ${al.name}`,'li');
+  if(al.members.length<2)dissolveAlliance(alId);
+  if(mode==='events')refreshAlliancePanel();
+}
+
+function addToAlliance(alId,cid){
+  const al=alliances.find(a=>a.id===alId);
+  if(!al||al.members.includes(cid))return;
+  al.members.push(cid);
+  addEv(`🤝 ${countries[cid]?.name} joins ${al.name}`,'ld');
+  refreshAlliancePanel();
+}
+
+function removeFromAlliance(alId,cid){
+  const al=alliances.find(a=>a.id===alId);
+  if(!al)return;
+  al.members=al.members.filter(m=>m!==cid);
+  if(al.members.length<2)dissolveAlliance(alId);
+}
+
+function promptNewAlliance(){
+  if(countries.length<2){alert('Need at least 2 countries!');return;}
+  const opts=countries.filter(c=>countT(c.id)>0);
+  const picks=[];
+  // Simple prompt: pick first two unallied nations
+  opts.forEach(c=>{if(!getAlliance(c.id)&&picks.length<2)picks.push(c.id);});
+  if(picks.length<2){alert('Need at least 2 unallied countries to form a new alliance.');return;}
+  formAlliance(picks);
+  if(mode==='events')refreshEUI();
+}
+
+// ── CALLED ON WAR DECLARATION: notify allies, maybe they join ──
+function notifyAlliesOfWar(attId,defId){
+  // Defender's alliance may call members to war
+  const defAlliance=getAlliance(defId);
+  if(defAlliance){
+    defAlliance.members.forEach(mid=>{
+      if(mid===defId||mid===attId)return;
+      if(!countries[mid]||!countries[mid].aiEnabled)return;
+      if(wars.some(w=>!w.done&&(w.attId===mid||w.defId===mid)))return;
+      if(countT(mid)<3)return;
+      // Willingness to join: loyalty-like check using morale + aggression
+      const willingness=0.4+(countries[mid].morale||1)*.3+(countries[mid].loyalty||.7)*.2;
+      if(Math.random()<willingness){
+        declWarAllied(mid,attId,defAlliance.name);
+      }
+    });
+  }
+  // Attacker's alliance members may pile on (opportunism)
+  const attAlliance=getAlliance(attId);
+  if(attAlliance){
+    attAlliance.members.forEach(mid=>{
+      if(mid===attId||mid===defId)return;
+      if(!countries[mid]||!countries[mid].aiEnabled)return;
+      if(wars.some(w=>!w.done&&(w.attId===mid||w.defId===mid)))return;
+      if(countT(mid)<3)return;
+      const willingness=(countries[mid].aggression||.3)*.6+Math.random()*.3;
+      if(willingness>0.55){
+        declWarAllied(mid,defId,attAlliance.name);
+      }
+    });
+  }
+}
+
+function declWarAllied(attId,defId,allianceName){
+  const aS=getStatsRaw(attId),dS=getStatsRaw(defId);
+  if(!aS||!dS||aS.area<2||dS.area<1)return;
+  // Don't attack if already in a war against this nation
+  if(wars.some(w=>!w.done&&((w.attId===attId&&w.defId===defId)||(w.attId===defId&&w.defId===attId))))return;
+  wars.push({attId,defId,round:0,done:false,
+    attHp:aS.mhp,defHp:dS.mhp,attMaxHp:aS.mhp,defMaxHp:dS.mhp,
+    attMorale:Math.min(1.3,(countries[attId].morale||1)*1.1),
+    defMorale:Math.min(1.4,(countries[defId].morale||1)*1.2),
+    attExhaustion:0,defExhaustion:0,attSupply:1,defSupply:1,
+    fx:null,fy:null,naval:false,peaceSued:false,allied:true});
+  addEv(`🤝⚔️ ${countries[attId].name} joins ${allianceName} war vs ${countries[defId].name}`,'ld');
+}
+
+// ── AI DIPLOMACY TICK ──
+// AI nations form alliances based on shared enemies, proximity, and relative power
+function allianceTick(){
+  if(countries.length<3)return;
+  countries.forEach(c=>{
+    if(!c.aiEnabled||countT(c.id)<3)return;
+    if(c.peaceTimer>5)return;
+
+    const myAl=getAlliance(c.id);
+
+    if(!myAl){
+      // Unallied: try to find or join an alliance
+      // 1. Try to join an existing alliance whose members are neighbours or share enemies
+      const cNB=getNB(c.id);
+      for(const al of alliances){
+        if(al.members.length>=6)continue;
+        const friendly=al.members.some(mid=>cNB.has(mid)||!wars.some(w=>!w.done&&((w.attId===c.id&&w.defId===mid)||(w.attId===mid&&w.defId===c.id))));
+        if(friendly&&Math.random()<0.18/aiSpeed){
+          addToAlliance(al.id,c.id);
+          return;
+        }
+      }
+      // 2. Form a brand-new alliance with the best candidate
+      const candidates=countries.filter(d=>{
+        if(!d||d.id===c.id||!d.aiEnabled)return false;
+        if(countT(d.id)<3)return false;
+        if(wars.some(w=>!w.done&&((w.attId===c.id&&w.defId===d.id)||(w.attId===d.id&&w.defId===c.id))))return false;
+        return true;
+      });
+      if(!candidates.length)return;
+
+      let best=null,bs=-Infinity;
+      candidates.forEach(d=>{
+        const dNB=getNB(d.id);
+        const shared=[...cNB].filter(x=>dNB.has(x)).length;
+        const cS=getStatsRaw(c.id),dS=getStatsRaw(d.id);if(!cS||!dS)return;
+        const powerBalance=1-Math.abs(cS.atk-dS.atk)/(cS.atk+dS.atk+1);
+        // Boost score if d is already in an alliance (merge opportunity)
+        const alBonus=getAlliance(d.id)?1.5:0;
+        const score=shared*2+powerBalance+alBonus+Math.random()*0.8;
+        if(score>bs){bs=score;best=d;}
+      });
+
+      // High formation chance: ~12% per tick this runs
+      const allianceChance=0.12*(1+bs*.3)/Math.max(1,aiSpeed*.5);
+      if(best&&Math.random()<allianceChance){
+        // If best is already in an alliance, join that one instead of forming new
+        const bestAl=getAlliance(best.id);
+        if(bestAl&&bestAl.members.length<6)addToAlliance(bestAl.id,c.id);
+        else formAlliance([c.id,best.id]);
+      }
+    } else {
+      // Already in alliance: try to recruit nearby unallied nations
+      if(myAl.members.length>=6)return;
+      const cNB=getNB(c.id);
+      for(const nid of cNB){
+        const d=countries[nid];
+        if(!d||!d.aiEnabled||getAlliance(nid))continue;
+        if(countT(nid)<3)continue;
+        if(wars.some(w=>!w.done&&((w.attId===c.id&&w.defId===nid)||(w.attId===nid&&w.defId===c.id))))continue;
+        if(Math.random()<0.14/aiSpeed){
+          addToAlliance(myAl.id,nid);
+          break;
+        }
+      }
+    }
+  });
+
+  // Existing alliances: recruit nations sharing current enemies
+  alliances.forEach(al=>{
+    if(al.members.length>=6)return;
+    const enemies=new Set();
+    al.members.forEach(cid=>{
+      wars.filter(w=>!w.done).forEach(w=>{
+        if(w.attId===cid)enemies.add(w.defId);
+        if(w.defId===cid)enemies.add(w.attId);
+      });
+    });
+    if(!enemies.size)return;
+    countries.forEach(c=>{
+      if(!c.aiEnabled||al.members.includes(c.id)||getAlliance(c.id))return;
+      if(countT(c.id)<3||c.peaceTimer>15)return;
+      const cNB=getNB(c.id);
+      const sharesThreat=[...enemies].some(eid=>cNB.has(eid));
+      if(sharesThreat&&Math.random()<0.18/aiSpeed){
+        addToAlliance(al.id,c.id);
+      }
+    });
+  });
+
+  // Clean up dead members
+  alliances.forEach(al=>{
+    al.members=al.members.filter(cid=>countries[cid]&&countT(cid)>0);
+  });
+  alliances=alliances.filter(al=>al.members.length>=2);
+}
+
+// ── AI ──
+// FIX: removed duplicate 'let revolts=[]' that was inside toggleAI — it shadowed the global,
+// causing revolts to never render or process correctly after AI was toggled.
+function toggleAI(){
+  aiOn=!aiOn;
+  const btn=document.getElementById('ai-btn');
+  const spdrow=document.getElementById('spdrow');
+  btn.textContent=aiOn?'⏸ AI':'▶ AI';
+  btn.classList.toggle('active',aiOn);
+  spdrow.style.display=aiOn?'flex':'none';
+  // FIX: clear stale revolts when stopping AI so ghost flashes don't persist on canvas
+  if(!aiOn){
+    clearInterval(aiTimer);
+    aiTimer=null;
+    revolts.length=0;
+    fleets.length=0;
+    redraw();
+  } else {
+    startLoop();
+  }
+}
+function setSpeed(s){aiSpeed=s;document.querySelectorAll('.spd').forEach(b=>b.classList.toggle('active',+b.dataset.s===s));if(aiOn){clearInterval(aiTimer);startLoop();}}
+function startLoop(){clearInterval(aiTimer);aiTimer=setInterval(aiTick,Math.max(25,400/aiSpeed));}
+
+function aiTick(){
+  tick++;
+  // Rebuild coast cache once per tick if dirty (not per-country call)
+  if(coastDirty)rebuildCoastCache();
+
+  wars.forEach(w=>{if(!w.done)runWar(w);});wars=wars.filter(w=>!w.done);
+  stepFleets();
+
+  countries.forEach(c=>{
+    if(!c.aiEnabled||c.peaceTimer>0){if(c.peaceTimer>0)c.peaceTimer--;return;}
+    if(countT(c.id)<3)return;
+    if(wars.some(w=>w.attId===c.id||w.defId===c.id))return;
+    if(fleets.some(f=>f.attId===c.id))return;
+
+    if(Math.random()<c.aggression*(0.5/aiSpeed+0.07)){
+      const nb=getNB(c.id);
+      // Filter out alliance members from attack pool
+      const myAlliance=getAlliance(c.id);
+      const attackableNB=myAlliance?[...nb].filter(id=>!myAlliance.members.includes(id)):[...nb];
+      if(attackableNB.length>0&&Math.random()<0.72){
+        // Land attack
+        const t=pickTgt(c.id,attackableNB);
+        if(t!==null)declWar(c.id,t);
+      } else if(coastCache[c.id]&&coastCache[c.id].length>0&&Math.random()<0.35){
+        // Naval attack — use cached coast, pick target with getStatsRaw
+        const aS=getStatsRaw(c.id);if(!aS)return;
+        let best=null,bs=-Infinity;
+        for(const d of countries){
+          if(!d||d.id===c.id||!d.aiEnabled)continue;
+          if(nb.has(d.id))continue;
+          if(myAlliance&&myAlliance.members.includes(d.id))continue; // don't attack allies
+          if(countT(d.id)<5)continue;
+          if(fleets.some(f=>f.attId===c.id&&f.defId===d.id))continue;
+          if(wars.some(w=>!w.done&&((w.attId===c.id&&w.defId===d.id)||(w.attId===d.id&&w.defId===c.id))))continue;
+          if(!(coastCache[d.id]&&coastCache[d.id].length>0))continue;
+          const dS=getStatsRaw(d.id);if(!dS)continue;
+          const score=(aS.atk-dS.def*.8)+Math.random()*4;
+          if(score>bs){bs=score;best=d;}
+        }
+        if(best)launchFleet(c.id,best.id);
+      }
+    }
+  });
+
+  if(tick%Math.max(3,30/aiSpeed)===0)checkRevolts();
+  if(tick%Math.max(2,ECO_INTERVAL/aiSpeed*2|0)===0)ecoTick();
+  if(tick%Math.max(1,8/aiSpeed)===0)allianceTick();
+  revolts=revolts.filter(rv=>{rv.ticks++;rv.flash=(rv.ticks%4<2);if(rv.ticks>Math.max(5,20/aiSpeed)){trigRevolt(rv);return false;}return true;});
+  updStatus();redraw();if(mode==='events')refreshEUI();
+}
+
+function getNB(cid){const nb=new Set();for(let row=0;row<ROWS;row++)for(let col=0;col<COLS;col++){if(owner[row*COLS+col]!==cid)continue;[[col-1,row],[col+1,row],[col,row-1],[col,row+1]].forEach(([nc,nr])=>{if(nc>=0&&nc<COLS&&nr>=0&&nr<ROWS){const nid=owner[nr*COLS+nc];if(nid>=0&&nid!==cid&&countries[nid])nb.add(nid);}});}return nb;}
+
+// ── REALISTIC TARGET SELECTION ──
+// Prefer: weaker neighbours, bordering heavily, low morale targets
+function pickTgt(attId,targets){
+  let best=null,bs=-Infinity;
+  const aS=getStatsRaw(attId);if(!aS)return null;
+  targets.forEach(tid=>{
+    const tS=getStatsRaw(tid);if(!tS||tS.area<1)return;
+    const powerRatio=aS.atk/(Math.max(1,tS.def)); // prefer weaker targets
+    const sizeLure  =Math.log(1+tS.area)*.5;       // larger nations are more tempting
+    const goldLure  =Math.log(1+tS.gold)*.3;        // wealth is attractive
+    const moralePen =(countries[tid]?.morale||1);    // low morale = easier target
+    const score=powerRatio+sizeLure+goldLure+(1-moralePen)+Math.random()*1.5;
+    if(score>bs){bs=score;best=tid;}
+  });
+  return best;
+}
+
+// ── WAR DECLARATION ──
+function declWar(attId,defId){
+  if(!countries[attId]||!countries[defId])return;
+  const aS=getStatsRaw(attId),dS=getStatsRaw(defId);
+  if(!aS||aS.area<3||!dS||dS.area<1)return;
+
+  // Attacker's morale starts high; defender starts at full morale (defending homeland)
+  const attMorale=Math.min(1.2, (countries[attId].morale||1)*1.1);
+  const defMorale=Math.min(1.3, (countries[defId].morale||1)*1.2); // defender bonus
+
+  wars.push({
+    attId,defId,round:0,done:false,
+    // HP now scaled by morale and population, not just territory
+    attHp:aS.mhp, defHp:dS.mhp,
+    attMaxHp:aS.mhp, defMaxHp:dS.mhp,
+    // Morale tracks will-to-fight (0=collapse, 1=normal, 1.3=peak)
+    attMorale, defMorale,
+    // War exhaustion accumulates over time — drains morale and gold
+    attExhaustion:0, defExhaustion:0,
+    // Supply tracks logistics — cut supply = penalty to attack
+    attSupply:1.0, defSupply:1.0,
+    // Front line location for rendering
+    fx:null,fy:null,
+    naval:false,
+    // Peace offers: if morale < threshold, loser sues for peace
+    peaceSued:false,
+  });
+  addEv(`⚔️ ${countries[attId].name} declares war on ${countries[defId].name}`,'la');
+  ticker2(`⚔️ ${countries[attId].name} attacks ${countries[defId].name}!`);
+  // War declaration lowers morale of both slightly
+  if(countries[attId])countries[attId].morale=Math.min(1.2,attMorale);
+  if(countries[defId])countries[defId].morale=Math.min(1.3,defMorale);
+  // Notify allies — they may join
+  notifyAlliesOfWar(attId,defId);
+}
+
+// ── REALISTIC WAR RESOLUTION ──
+// Factors: terrain, supply lines, morale, war exhaustion, gold/manpower, defender bonus
+function runWar(w){
+  w.round++;
+  const aC=countries[w.attId],dC=countries[w.defId];
+  const aS=getStatsRaw(w.attId),dS=getStatsRaw(w.defId);
+  if(!aS||!dS||aS.area<1||dS.area<1){
+    endWar(w,(!aS||aS.area<1)?w.defId:w.attId,(!aS||aS.area<1)?w.attId:w.defId);
+    return;
+  }
+
+  // ── SUPPLY LINES ──
+  // Attacker's supply degrades as they push deep into enemy territory
+  // (ratio of owned border tiles to total front — longer front = worse supply)
+  const frontLen=getFrontLength(w.attId,w.defId);
+  const supplyStrain=Math.min(1, frontLen/(aS.area*.3+1));
+  w.attSupply=Math.max(0.4, 1-supplyStrain*.4);
+  // Defender has home-supply advantage
+  w.defSupply=Math.min(1.1, 0.9+(dC?.loyalty||.7)*.2);
+
+  // ── TERRAIN MODIFIER ──
+  // Battle happens at the front tile — check its terrain
+  const bt=getBT(w.attId,w.defId);
+  if(bt){w.fx=bt.col;w.fy=bt.row;}
+  let terrainMod=1.0;
+  if(bt){
+    const t=TR[grid[bt.row*COLS+bt.col]];
+    // Mountain/forest/swamp heavily favours defender
+    terrainMod=1+t.d*.08; // defender gets terrain bonus
+  }
+
+  // ── MORALE ──
+  const am=Math.max(0.1, w.attMorale||1);
+  const dm=Math.max(0.1, w.defMorale||1);
+
+  // ── GOLD FUNDS THE WAR ──
+  // Nations with empty treasuries fight at reduced effectiveness
+  const goldA=Math.min(1.3, 0.6+(aC?.gold||0)/300);
+  const goldD=Math.min(1.3, 0.6+(dC?.gold||0)/300);
+
+  // ── POPULATION = MANPOWER ──
+  const manA=Math.min(1.3, 0.7+(aS.pop||1)/500);
+  const manD=Math.min(1.3, 0.7+(dS.pop||1)/500);
+
+  // ── COMPUTE EFFECTIVE ATTACK/DEFENCE ──
+  const effAtk=aS.atk * am * w.attSupply * goldA * manA;
+  const effDef=dS.def * dm * w.defSupply * goldD * manD * terrainMod;
+
+  // Damage formula: attacker punches into defender's HP, defender counter-attacks
+  const baseADmg=Math.max(1,(effAtk*(.8+Math.random()*.4) - effDef*(.5+Math.random()*.3))|0);
+  const baseDBsm=Math.max(1,(aS.atk*(.5+Math.random()*.3)*dm*goldD - effDef*(.2+Math.random()*.2))|0);
+  const aDmg=Math.max(0,baseADmg);
+  const dDmg=Math.max(1,baseDBsm); // defender always inflicts some casualties
+
+  w.defHp=Math.max(0,w.defHp-aDmg);
+  w.attHp=Math.max(0,w.attHp-dDmg);
+
+  // ── TERRITORIAL PROGRESS ──
+  // Only gain tiles if attacker is clearly winning the exchange
+  if(aDmg>dDmg*1.2){
+    conqTile(w.attId,w.defId);
+  } else if(dDmg>aDmg*1.4 && w.round>3){
+    // Strong defensive performance — push attacker back
+    conqTile(w.defId,w.attId);
+  }
+
+  // ── WAR EXHAUSTION ──
+  // Rises each round; faster if taking heavy casualties or spending lots of gold
+  w.attExhaustion=(w.attExhaustion||0)+(dDmg/(w.attMaxHp+1))*0.8+0.004;
+  w.defExhaustion=(w.defExhaustion||0)+(aDmg/(w.defMaxHp+1))*0.6+0.002; // defender endures better
+  // Drain gold each round (war maintenance)
+  if(aC)aC.gold=Math.max(0,aC.gold-Math.max(1,(aS.area/40)|0));
+  if(dC)dC.gold=Math.max(0,dC.gold-Math.max(1,(dS.area/60)|0));
+  // Exhaustion degrades morale
+  w.attMorale=Math.max(0.05,(w.attMorale||1)-w.attExhaustion*.015);
+  w.defMorale=Math.max(0.05,(w.defMorale||1)-w.defExhaustion*.01);
+
+  // ── MORALE COLLAPSE ──
+  // A side whose morale crashes sues for peace before HP hits zero (real-world wars end this way)
+  const attMoraleCollapse=w.attMorale<0.18&&w.round>5;
+  const defMoraleCollapse=w.defMorale<0.12&&w.round>5;
+  // HP exhaustion
+  const attHpLow=w.attHp<=0;
+  const defHpLow=w.defHp<=0;
+
+  if((defHpLow||defMoraleCollapse)&&(attHpLow||attMoraleCollapse)){
+    // Both sides broken — armistice
+    w.done=true;
+    addEv(`🕊️ Exhausted armistice: ${aC?.name} & ${dC?.name}`,'li');
+    ticker2(`🕊️ Armistice! Both sides exhausted.`);
+    [w.attId,w.defId].forEach(id=>{
+      if(countries[id]){countries[id].peaceTimer=20;countries[id].morale=Math.max(0.3,countries[id].morale-.15);}
+    });
+  } else if(defHpLow||defMoraleCollapse){
+    if(!w.peaceSued&&w.defMorale<0.2&&!defHpLow){
+      // Defender sues for peace — partial concession, not total collapse
+      w.peaceSued=true;
+      addEv(`🏳️ ${dC?.name} sues for peace with ${aC?.name}`,'li');
+      ticker2(`🏳️ ${dC?.name} surrenders territory to ${aC?.name}`);
+      // Transfer a chunk of tiles but nation survives
+      const tilesToCede=Math.max(1,(countT(w.defId)*.3)|0);
+      for(let i=0;i<tilesToCede;i++)conqTile(w.attId,w.defId);
+      endWarPeace(w,w.attId,w.defId,false);
+    } else {
+      endWar(w,w.attId,w.defId);
+    }
+  } else if(attHpLow||attMoraleCollapse){
+    endWar(w,w.defId,w.attId);
+  }
+}
+
+// ── WAR END VARIANTS ──
+// Peace treaty (non-total victory — loser survives but weakened)
+function endWarPeace(w,wId,lId,mutual){
+  w.done=true;
+  const wn=countries[wId]?.name||'?',ln=countries[lId]?.name||'?';
+  addEv(`📜 ${wn} imposes terms on ${ln}`,'lw');
+  // Indemnity: loser pays war reparations in gold
+  const indemnity=Math.min(countries[lId]?.gold||0, (countries[lId]?.gold||0)*.35|0);
+  if(countries[wId])countries[wId].gold+=(countries[wId].gold||0)+indemnity;
+  if(countries[lId])countries[lId].gold=Math.max(0,(countries[lId].gold||0)-indemnity);
+  if(countries[wId])countries[wId].peaceTimer=8;
+  if(countries[lId]){
+    countries[lId].peaceTimer=40;
+    countries[lId].morale=Math.max(0.2,(countries[lId].morale||1)*.6);
+    countries[lId].loyalty=Math.max(.1,(countries[lId].loyalty||.7)-.2);
+  }
+  rclList();
+}
+
+// Total defeat — loser fully absorbed
+function endWar(w,wId,lId){
+  w.done=true;
+  const wn=countries[wId]?.name||'?',ln=countries[lId]?.name||'?';
+  addEv(`🏆 ${wn} defeats ${ln}!`,'lw');
+  ticker2(`🏆 ${wn} conquers ${ln}!`);
+  lootVictory(wId,lId);
+  capFull(lId,wId);
+  if(countries[wId]){
+    countries[wId].peaceTimer=5;
+    countries[wId].morale=Math.min(1.4,(countries[wId].morale||1)+.15); // victory euphoria
+  }
+  if(countries[lId]){
+    countries[lId].peaceTimer=35;
+    countries[lId].aggression=Math.max(.05,countries[lId].aggression*.7);
+    countries[lId].loyalty=Math.max(.05,(countries[lId].loyalty||.7)-.2);
+    countries[lId].morale=Math.max(.1,(countries[lId].morale||1)*.4);
+    countries[lId].gold=Math.max(0,(countries[lId].gold||0)*.5|0);
+    countries[lId].pop =Math.max(1,(countries[lId].pop ||1)*.75|0);
+  }
+  rclList();
+}
+
+// Get approximate front length (contested border tiles)
+function getFrontLength(aId,dId){
+  let count=0;
+  for(let row=0;row<ROWS&&count<80;row+=2)for(let col=0;col<COLS;col+=2){
+    if(owner[row*COLS+col]!==aId)continue;
+    for(const[nc,nr]of[[col-1,row],[col+1,row],[col,row-1],[col,row+1]]){
+      if(nc>=0&&nc<COLS&&nr>=0&&nr<ROWS&&owner[nr*COLS+nc]===dId){count++;break;}
+    }
+  }
+  return count;
+}
+
+function conqTile(wId,lId){
+  const bt=getBT(wId,lId);
+  if(!bt)return;
+  const i=bt.row*COLS+bt.col;
+  owner[i]=wId;
+  dirtyCoast();
+  const ci=cities.findIndex(c=>c.x===bt.col&&c.y===bt.row);
+  if(ci>=0){
+    const city=cities[ci];
+    if(city.isCapital&&city.cid===lId){
+      // Capital captured — country collapses!
+      collapseCountry(lId,wId,city.name);
+      return;
+    }
+    cities[ci].cid=wId;
+    if(countries[wId])cities[ci].color=countries[wId].color;
+  }
+}
+
+// Collapse a country whose capital was taken. All tiles absorbed by conqueror.
+function collapseCountry(loserId,conquId,capitalName){
+  const loser=countries[loserId],conq=countries[conquId];
+  if(!loser||!conq)return;
+  addEv(`💥 ${capitalName} falls! ${loser.name} COLLAPSES → ${conq.name}`,'lw');
+  ticker2(`💥 ${loser.name} has fallen! Capital ${capitalName} seized by ${conq.name}!`);
+  lootVictory(conquId,loserId);
+  // Transfer all tiles and cities to conqueror
+  for(let i=0;i<owner.length;i++)if(owner[i]===loserId)owner[i]=conquId;
+  cities.forEach(c=>{
+    if(c.cid===loserId){
+      c.cid=conquId;
+      c.color=conq.color;
+      c.isCapital=false; // absorbed cities lose capital status
+    }
+  });
+  // End any active wars involving the collapsed nation
+  wars.forEach(w=>{
+    if(!w.done&&(w.attId===loserId||w.defId===loserId))w.done=true;
+  });
+  fleets=fleets.filter(f=>f.attId!==loserId&&f.defId!==loserId);
+  loser.gold=0; loser.pop=0;
+  loser.peaceTimer=999;
+  dirtyCoast();
+  redraw();
+  rclList();
+  fillSels();
+}
+function getBT(aId,dId){const c=[];for(let row=0;row<ROWS&&c.length<40;row++)for(let col=0;col<COLS;col++){if(owner[row*COLS+col]!==dId)continue;let t=false;[[col-1,row],[col+1,row],[col,row-1],[col,row+1]].forEach(([nc,nr])=>{if(nc>=0&&nc<COLS&&nr>=0&&nr<ROWS&&owner[nr*COLS+nc]===aId)t=true;});if(t){c.push({col,row});if(c.length>=40)break;}}return c.length?c[Math.random()*c.length|0]:null;}
+
+// ── ECONOMY TICK ──
+// Runs every N ticks (not every tick — keep it light)
+const ECO_INTERVAL=8; // ticks between economy updates
+
+function ecoTick(){
+  countries.forEach(c=>{
+    if(!countries[c.id])return;
+    const area=countT(c.id);
+    if(area===0)return;
+    const cb=cities.filter(x=>x.cid===c.id).length;
+
+    // ── GOLD INCOME ──
+    // Base: 1 gold/tick per 10 tiles (farmland tiles give 2x)
+    let income=0;
+    for(let i=0;i<owner.length;i++){
+      if(owner[i]!==c.id)continue;
+      const t=TR[grid[i]];
+      income += t.p>0 ? 2 : (grid[i]===O?0:1); // farmland earns double
+    }
+    income = (income/10)|0;
+    income += cb*3;  // cities are major gold sources
+    // War costs gold (each active war drains treasury)
+    const activeWars=wars.filter(w=>!w.done&&(w.attId===c.id||w.defId===c.id)).length;
+    const warCost=activeWars*Math.max(2,(area/30)|0);
+    c.gold=Math.max(0, c.gold + income - warCost);
+
+    // ── POPULATION GROWTH ──
+    // Base growth rate: ~1-3% per eco cycle depending on terrain/cities
+    // Farmland and plains boost growth; desert/snow penalise
+    let growthRate=0.012 + cb*0.002;
+    // Terrain bonus (sampled — not full scan, use area proxy)
+    if(area>0)growthRate+=Math.min(0.01, pS_estimate(c.id)/area*0.005);
+    // War reduces population
+    if(activeWars>0)growthRate-=activeWars*0.004;
+    // Low gold starves people
+    if(c.gold<10)growthRate-=0.008;
+    growthRate=Math.max(-0.02,Math.min(0.04,growthRate));
+
+    // Accumulate fractional growth then apply whole units
+    c.popGrowthAcc=(c.popGrowthAcc||0)+c.pop*growthRate;
+    if(Math.abs(c.popGrowthAcc)>=1){
+      c.pop=Math.max(1,c.pop+(c.popGrowthAcc|0));
+      c.popGrowthAcc-=(c.popGrowthAcc|0);
+    }
+    // ── MORALE RECOVERY ──
+    // Nations recover morale slowly in peacetime; faster with gold and high loyalty
+    const inWar=wars.some(w=>!w.done&&(w.attId===c.id||w.defId===c.id));
+    if(!inWar&&(c.morale||1)<1.0){
+      const rec=0.008+(c.gold>50?0.004:0)+(c.loyalty>.7?0.003:0);
+      c.morale=Math.min(1.0,(c.morale||1)+rec);
+    }
+    // Hard cap: population can't exceed area*20 (overcrowding)
+    c.pop=Math.min(c.pop, area*20);
+  });
+}
+
+// Cheap terrain productivity estimate (samples every 4th tile)
+function pS_estimate(cid){
+  let ps=0;
+  for(let i=0;i<owner.length;i+=4){
+    if(owner[i]===cid)ps+=TR[grid[i]].p;
+  }
+  return ps;
+}
+
+// When a war is won: winner loots gold and absorbs some population
+function lootVictory(winnerId,loserId){
+  const w=countries[winnerId],l=countries[loserId];
+  if(!w||!l)return;
+  const goldTaken=Math.min(l.gold, (l.gold*.4)|0);
+  const popAbsorbed=Math.min(l.pop, (l.pop*.25)|0);
+  w.gold+=goldTaken;
+  w.pop +=popAbsorbed;
+  if(goldTaken>0||popAbsorbed>0){
+    addEv(`💰 ${w.name} loots ${goldTaken}g, gains ${popAbsorbed}k pop from ${l.name}`,'lw');
+  }
+}
+function checkRevolts(){
+  countries.forEach(c=>{
+    if(!c.aiEnabled)return;
+    const tiles=countT(c.id);if(tiles<18)return;
+    const prob=(1-c.loyalty)*(tiles/400)*(.12/aiSpeed+.015);
+    if(Math.random()<prob){
+      const rt=findRevTile(c.id);
+      if(rt){revolts.push({x:rt.col,y:rt.row,cid:c.id,ticks:0,flash:true,size:Math.max(4,tiles*.09|0)});addEv(`🔥 Revolt brewing in ${c.name}!`,'lr');ticker2(`🔥 REVOLT in ${c.name}!`);}
+    }
+  });
+}
+function findRevTile(cid){const cands=[];for(let row=0;row<ROWS;row+=2)for(let col=0;col<COLS;col+=2){if(owner[row*COLS+col]===cid&&grid[row*COLS+col]!==O)cands.push({col,row});}if(!cands.length)return null;return cands.sort(()=>Math.random()-.5).slice(0,20)[0];}
+function trigRevolt(rv){
+  const parent=countries[rv.cid];if(!parent)return;
+  const pArr=parent.name.split(' ');const baseName=pArr[pArr.length-1]||'Land';
+  const rname=RN[Math.random()*RN.length|0]+' '+baseName;
+  const pr=crgb(parent.color);
+  const rc='#'+[Math.min(255,255-pr[0]+Math.random()*80|0),Math.min(255,255-pr[1]+Math.random()*80|0),Math.min(255,255-pr[2]+Math.random()*80|0)].map(x=>x.toString(16).padStart(2,'0')).join('');
+  const newId=addC(rname,rc,{ag:.5+Math.random()*.3,ai:true,rebel:true,ly:.4+Math.random()*.25});
+  const transferred=new Set();const q=[[rv.x,rv.y]];const vis=new Set();
+  while(q.length&&transferred.size<rv.size){const[c,r]=q.shift();const k=r*COLS+c;if(vis.has(k))continue;vis.add(k);if(c<0||c>=COLS||r<0||r>=ROWS)continue;if(owner[k]===rv.cid&&grid[k]!==O){owner[k]=newId;transferred.add(k);const ci=cities.findIndex(ct=>ct.x===c&&ct.y===r);if(ci>=0){cities[ci].cid=newId;cities[ci].color=rc;}q.push([c+1,r],[c-1,r],[c,r+1],[c,r-1]);}}
+  dirtyCoast();
+  if(transferred.size>0){const arr=[...transferred];const s=arr[Math.random()*arr.length|0];const sc=s%COLS,sr=s/COLS|0;if(!cities.find(ct=>ct.x===sc&&ct.y===sr))ac(sc,sr,CN[Math.random()*CN.length|0],newId);}
+  if(transferred.size>2){const nS=getStats(newId),pS=getStats(rv.cid);wars.push({attId:newId,defId:rv.cid,round:0,done:false,attHp:nS?.mhp||15,defHp:pS?.mhp||50,attMaxHp:nS?.mhp||15,defMaxHp:pS?.mhp||50,fx:rv.x,fy:rv.y});}
+  addEv(`⚡ ${rname} breaks FREE from ${parent.name}!`,'lr');ticker2(`⚡ ${rname} declares independence!`);rclList();fillSels();
+}
+
+function addEv(text,cls){evlog.unshift({text,cls});if(evlog.length>80)evlog.pop();}
+function refreshEUI(){
+  const le=document.getElementById('evlogbody');if(le)le.innerHTML=evlog.length?`<div class="evlog">${evlog.map(e=>`<div class="evrow ${e.cls}">${e.text}</div>`).join('')}</div>`:'<div style="color:var(--dim);font-size:.74rem;font-style:italic;padding:4px">No events yet. Enable AI on countries and press ▶ AI!</div>';
+  const ne=document.getElementById('natbody');if(ne){
+    if(!countries.length){ne.innerHTML='<div style="color:var(--dim);font-size:.74rem">No countries.</div>';}
+    else{
+      const sorted=[...countries].sort((a,b)=>(b.gold||0)+(b.pop||0)*2-((a.gold||0)+(a.pop||0)*2));
+      ne.innerHTML=`<table class="wtbl">
+        <tr><th>Nation</th><th>★ Capital</th><th>💰</th><th>👥</th><th>😤</th><th>🤝</th><th>Status</th></tr>
+        ${sorted.map(c=>{
+          const cap=cities.find(x=>x.cid===c.id&&x.isCapital);
+          const iw=wars.find(w=>!w.done&&(w.attId===c.id||w.defId===c.id));
+          const nw=iw&&iw.naval;
+          const rv=revolts.some(r=>r.cid===c.id);
+          const fl=fleets.some(f=>f.attId===c.id);
+          const coast=coastCache[c.id]&&coastCache[c.id].length>0;
+          const goldStr=(c.gold||0)>999?((c.gold/1000).toFixed(1)+'k'):(c.gold||0);
+          const popStr=(c.pop||0)+'k';
+          const warMorale=iw?(c.id===iw.attId?iw.attMorale:iw.defMorale)||1:c.morale||1;
+          const morPct=(warMorale/1.3*100)|0;
+          const morColor=morPct>60?'#44cc88':morPct>30?'#f0b930':'#cc3333';
+          const al=getAlliance(c.id);
+          return`<tr>
+            <td><span style="color:${c.color}">■</span> ${c.name}${c.isRebel?' ⚡':''}</td>
+            <td style="color:#f0b930">${cap?cap.name:'<span style="color:#ff4444">–</span>'}</td>
+            <td style="color:var(--gold)">${goldStr}</td>
+            <td style="color:#44cc88">${popStr}</td>
+            <td style="color:${morColor}">${morPct}%</td>
+            <td>${al?`<span style="color:${al.color};font-size:.54rem">${al.name}</span>`:'–'}</td>
+            <td>${nw?'⚓':iw?'⚔️':fl?'⛵':rv?'🔥':coast?'🌊':'☮️'}</td>
+          </tr>`;
+        }).join('')}
+      </table>`;
+    }
+  }
+  refreshAlliancePanel();
+}
+
+function refreshAlliancePanel(){
+  const ae=document.getElementById('albody');if(!ae)return;
+  if(!alliances.length){
+    ae.innerHTML=`<div style="color:var(--dim);font-size:.74rem;font-style:italic;padding:4px">No alliances yet. They form automatically when AI nations share enemies, or create one below.</div>`+
+      `<button class="acbtn" onclick="promptNewAlliance()" style="margin-top:6px">+ FORM ALLIANCE</button>`;
+    return;
+  }
+  ae.innerHTML=alliances.map(al=>{
+    const members=al.members.map(cid=>countries[cid]).filter(Boolean);
+    const atWar=al.members.some(cid=>wars.some(w=>!w.done&&(w.attId===cid||w.defId===cid)));
+    const addable=countries.filter(c=>!al.members.includes(c.id)&&countT(c.id)>0).slice(0,3);
+    return`<div class="alblk">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="altit" style="color:${al.color};margin-bottom:0">🤝 ${al.name}${atWar?' <span style="color:#ff7744;font-size:.5rem">⚔️ WAR</span>':''}</div>
+        <button onclick="demolishAlliance(${al.id})" style="font-family:'Cinzel',serif;font-size:.55rem;padding:4px 12px;background:#3a0000;border:2px solid #cc2222;color:#ff5555;border-radius:3px;cursor:pointer;letter-spacing:.08em;font-weight:700">💥 DEMOLISH</button>
+      </div>
+      <div class="almem">${members.map(c=>`<span style="background:${c.color}22;border:1px solid ${c.color}55;color:${c.color};cursor:pointer" onclick="kickFromAlliance(${al.id},${c.id})" title="Kick ${c.name}">${c.name} ✕</span>`).join('')}</div>
+      ${addable.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px"><span style="font-size:.5rem;color:var(--dim);align-self:center">Add:</span>${addable.map(c=>`<button class="albtn" onclick="addToAlliance(${al.id},${c.id})" style="color:${c.color};border-color:${c.color}44">+${c.name}</button>`).join('')}</div>`:''}
+    </div>`;
+  }).join('')+`<button class="acbtn" onclick="promptNewAlliance()" style="margin-top:4px">+ FORM ALLIANCE</button>`;
+}
+function ticker2(msg){const el=document.getElementById('etick');el.textContent=msg;el.style.display='block';clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',3500);}
+function updStatus(){
+  const alive=countries.filter(c=>countT(c.id)>0);
+  const aw=wars.filter(w=>!w.done).length;
+  const nw=wars.filter(w=>!w.done&&w.naval).length;
+  const totalPop=alive.reduce((s,c)=>s+(c.pop||0),0);
+  const richest=alive.length?alive.reduce((a,b)=>(b.gold||0)>(a.gold||0)?b:a,alive[0]):null;
+  document.getElementById('sb').textContent=
+    `${alive.length} nations · ${aw} wars${nw?` (${nw}⚓)`:''} · ${fleets.length}⛵ · `+
+    `🤝${alliances.length} alliances · 👥${totalPop}k · 💰${richest?richest.name+' '+richest.gold:'–'}`;
+}
+function setMode(m){mode=m;['draw','battle','events'].forEach(id=>document.getElementById('tab-'+id).classList.toggle('active',id===m));buildDrawer();}
+
+document.addEventListener('keydown',e=>{
+  if(['INPUT','SELECT'].includes(e.target.tagName))return;
+  const k=e.key.toLowerCase();
+  if(k==='p')setTool('paint');if(k==='e')setTool('erase');if(k==='f')setTool('fill');if(k==='i')setTool('eyedrop');if(k==='c')setTool('city');
+  if(e.key==='['){brush=Math.max(1,brush-1);const r=document.getElementById('brange');if(r){r.value=brush;document.getElementById('bval').textContent=brush;}}
+  if(e.key===']'){brush=Math.min(20,brush+1);const r=document.getElementById('brange');if(r){r.value=brush;document.getElementById('bval').textContent=brush;}}
+  if(e.key===' '){e.preventDefault();toggleAI();}
+  if(e.key==='Escape')closeM();
+});
+
+window.addEventListener('DOMContentLoaded',()=>{
+  // FIX: call buildDrawer BEFORE rclList so #clist exists in the DOM when rclList runs
+  addC('Nordheim','#3355cc',{ag:.35,ai:true,ly:.72});
+  addC('Solaris','#cc8833',{ag:.6,ai:true,ly:.55});
+  addC('Verdania','#228844',{ag:.28,ai:true,ly:.8});
+  addC('Ashkara','#cc3322',{ag:.72,ai:true,ly:.4});
+  initCanvas();
+  // fit() is called inside initCanvas→fit, so camera is already set correctly
+  buildDrawer();   // drawer must exist before rclList/fillSels
+  fillSels();
+  updStatus();
+});
+</script>
+</body>
+</html>
