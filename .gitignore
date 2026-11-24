@@ -1,4 +1,34 @@
+# Build artifacts
 build/
+*.exe
+*.dll
+*.obj
+*.o
+*.lib
+*.a
+*.res
+*.cer
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+_ul*
+_ul-*
+
+# IDE files
+.vs/
+.vscode/
+*.suo
+*.user
+*.sln
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# WebView2 packages
 third_party/webview2/*.nupkg
 third_party/webview2/*.zip
 webview2-index.json
