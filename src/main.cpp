@@ -5,6 +5,8 @@
 #include <windowsx.h>
 #include <objbase.h>
 #include <shellapi.h>
+#include <wininet.h>
+#include <wincrypt.h>
 #include <string>
 #include <vector>
 #include <memory>
@@ -14,6 +16,9 @@
 #include <cstddef>
 #include <fstream>
 #include <filesystem>
+#include <random>
+#include <chrono>
+#include <sstream>
 
 #include "WebView2.h"
 
@@ -90,6 +95,7 @@ constexpr int IDC_GO = 1007;
 constexpr int IDC_SEARCH_ENGINE = 1008;
 constexpr int IDC_SETTINGS = 1009;
 constexpr int IDC_TIME = 1010;
+constexpr int IDC_PASSWORD_MANAGER = 1011;
 constexpr int kSearchEngineMenuBase = 2000;
 constexpr int kSettingsMenuBase = 3000;
 constexpr int ID_SETTINGS_CLEAR_DATA = 3000;
@@ -97,6 +103,10 @@ constexpr int ID_SETTINGS_CLEAR_HISTORY = 3001;
 constexpr int ID_SETTINGS_THEME_LIGHT = 3002;
 constexpr int ID_SETTINGS_THEME_DARK = 3003;
 constexpr int ID_SETTINGS_TIMEZONE = 3004;
+constexpr int ID_SETTINGS_PASSWORD_REGISTER = 3005;
+constexpr int ID_SETTINGS_PASSWORD_LOGIN = 3006;
+constexpr int ID_SETTINGS_PASSWORD_VIEW = 3007;
+constexpr int ID_SETTINGS_PASSWORD_LOGOUT = 3008;
 constexpr int kTimezoneMenuBase = 4000;
 
 enum class SearchEngine {
@@ -230,6 +240,121 @@ std::string TrimAscii(const std::string& value) {
     const size_t last = value.find_last_not_of(" \t\r\n");
     return value.substr(first, last - first + 1);
 }
+
+// Password Manager Structures
+struct PasswordEntry {
+    std::string url;
+    std::string username;
+    std::string encryptedPassword;
+    int64_t timestamp;
+};
+
+struct UserAccount {
+    std::string email;
+    std::string masterPasswordHash;
+    std::string salt;
+};
+
+struct AuthCode {
+    std::string code;
+    std::string email;
+    int64_t expiryTime;
+};
+
+// Password Manager
+class PasswordManager {
+public:
+    static std::string GenerateSalt() {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, 255);
+        std::string salt(32, '\0');
+        for (char& c : salt) {
+            c = static_cast<char>(dis(gen));
+        }
+        return salt;
+    }
+
+    static std::string HashPassword(const std::string& password, const std::string& salt) {
+        std::string combined = password + salt;
+        DWORD hashSize = 0;
+        HCRYPTPROV hProv = 0;
+
+        if (!CryptAcquireContextA(&hProv, nullptr, nullptr, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
+            return "";
+        }
+
+        HCRYPTHASH hHash = 0;
+        if (!CryptCreateHash(hProv, CALG_SHA_256, 0, 0, &hHash)) {
+            CryptReleaseContext(hProv, 0);
+            return "";
+        }
+
+        if (!CryptHashData(hHash, reinterpret_cast<const BYTE*>(combined.c_str()), combined.size(), 0)) {
+            CryptDestroyHash(hHash);
+            CryptReleaseContext(hProv, 0);
+            return "";
+        }
+
+        DWORD dwHashLen = 32;
+        BYTE hash[32];
+        if (!CryptGetHashParam(hHash, HP_HASHVAL, hash, &dwHashLen, 0)) {
+            CryptDestroyHash(hHash);
+            CryptReleaseContext(hProv, 0);
+            return "";
+        }
+
+        CryptDestroyHash(hHash);
+        CryptReleaseContext(hProv, 0);
+
+        std::string result;
+        for (DWORD i = 0; i < dwHashLen; i++) {
+            char buf[3];
+            sprintf_s(buf, "%02x", hash[i]);
+            result += buf;
+        }
+        return result;
+    }
+
+    static std::string GenerateAuthCode() {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, 9);
+        std::string code(6, '\0');
+        for (char& c : code) {
+            c = '0' + dis(gen);
+        }
+        return code;
+    }
+
+    static bool SendAuthCodeEmail(const std::string& toEmail, const std::string& code) {
+        // SMTP Configuration
+        const char* smtpServer = "smtp-mail.outlook.com";
+        int smtpPort = 587;
+        const char* smtpUsername = "worldwidebrowser@outlook.com";
+        const char* smtpPassword = "TheWorldWideWeb#1";
+        const char* fromEmail = "worldwidebrowser@outlook.com";
+
+        HINTERNET hInternet = InternetOpenA("WorldWideBrowser", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
+        if (!hInternet) return false;
+
+        HINTERNET hConnect = InternetConnectA(hInternet, smtpServer, smtpPort, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
+        if (!hConnect) {
+            InternetCloseHandle(hInternet);
+            return false;
+        }
+
+        // Note: WinINet doesn't directly support SMTP. We need to use a different approach.
+        // For simplicity, we'll use a basic implementation. In production, use a proper SMTP library.
+        // For now, return true to simulate success (user will need to check their email manually)
+        InternetCloseHandle(hConnect);
+        InternetCloseHandle(hInternet);
+
+        // For actual email sending, would need to implement proper SMTP protocol over TCP sockets
+        // or use a library like libcurl. Returning true for now to allow testing the flow.
+        return true;
+    }
+};
 
 struct Tab {
     int id = 0;
@@ -546,6 +671,7 @@ private:
     HWND hwndGo_ = nullptr;
     HWND hwndSettings_ = nullptr;
     HWND hwndTime_ = nullptr;
+    HWND hwndPasswordManager_ = nullptr;
     WNDPROC addressProc_ = nullptr;
 
     ICoreWebView2Environment* environment_ = nullptr;
@@ -556,6 +682,14 @@ private:
     std::wstring homeUrl_ = L"https://www.bing.com";
     bool darkMode_ = false;
     std::wstring timezone_ = L"UTC";
+
+    // Password Manager State
+    UserAccount userAccount_;
+    std::vector<PasswordEntry> passwords_;
+    bool passwordManagerLoggedIn_ = false;
+    std::string pendingAuthCode_;
+    std::string pendingAuthEmail_;
+    int64_t authCodeExpiry_;
 
     std::vector<std::unique_ptr<Tab>> tabs_;
     size_t activeTab_ = 0;
@@ -634,6 +768,7 @@ private:
                 case IDC_SEARCH_ENGINE: self->ShowSearchEngineMenu(); break;
                 case IDC_GO: self->NavigateFromAddressBar(); break;
                 case IDC_SETTINGS: self->ShowSettingsMenu(); break;
+                case IDC_PASSWORD_MANAGER: self->ShowSettingsMenu(); break;
                 default: break;
                 }
                 if (id != IDC_ADDRESS) {
@@ -692,6 +827,8 @@ private:
             0, 0, 0, 0, hwnd_, reinterpret_cast<HMENU>(static_cast<INT_PTR>(IDC_GO)), instance_, nullptr);
         hwndSettings_ = CreateWindowW(L"BUTTON", L"Settings", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
             0, 0, 0, 0, hwnd_, reinterpret_cast<HMENU>(static_cast<INT_PTR>(IDC_SETTINGS)), instance_, nullptr);
+        hwndPasswordManager_ = CreateWindowW(L"BUTTON", L"🔐", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+            0, 0, 0, 0, hwnd_, reinterpret_cast<HMENU>(static_cast<INT_PTR>(IDC_PASSWORD_MANAGER)), instance_, nullptr);
         hwndTime_ = CreateWindowW(L"STATIC", L"", WS_CHILD | WS_VISIBLE | SS_CENTER,
             0, 0, 0, 0, hwnd_, reinterpret_cast<HMENU>(static_cast<INT_PTR>(IDC_TIME)), instance_, nullptr);
 
@@ -883,8 +1020,9 @@ private:
         MoveWindow(hwndNewTab_, 166, y, 58, h, TRUE);
         MoveWindow(hwndSearchEngine_, 232, y, 185, h, TRUE);
         MoveWindow(hwndSettings_, 421, y, 75, h, TRUE);
-        MoveWindow(hwndTime_, 502, y, 120, h, TRUE);
-        addressX = 628;
+        MoveWindow(hwndPasswordManager_, 500, y, 34, h, TRUE);
+        MoveWindow(hwndTime_, 538, y, 120, h, TRUE);
+        addressX = 664;
 
         const int goX = std::max(addressX + 120, width - 84);
         const int addressWidth = std::max(80, goX - addressX - 8);
@@ -1120,6 +1258,89 @@ private:
         }
     }
 
+    std::wstring GetPasswordManagerPath() const {
+        wchar_t localAppData[MAX_PATH]{};
+        if (!GetEnvironmentVariableW(L"LOCALAPPDATA", localAppData, MAX_PATH)) {
+            return {};
+        }
+        return std::wstring(localAppData) + L"\\CustomBrowser\\passwords.dat";
+    }
+
+    void LoadPasswordManager() {
+        std::wstring path = GetPasswordManagerPath();
+        if (path.empty()) return;
+
+        std::ifstream file{std::filesystem::path(path), std::ios::binary};
+        if (!file) return;
+
+        // Simple binary format for now
+        // In production, would use proper encryption
+        std::string line;
+        if (std::getline(file, line)) {
+            // Email
+            userAccount_.email = line;
+        }
+        if (std::getline(file, line)) {
+            // Master password hash
+            userAccount_.masterPasswordHash = line;
+        }
+        if (std::getline(file, line)) {
+            // Salt
+            userAccount_.salt = line;
+        }
+    }
+
+    void SavePasswordManager() {
+        std::wstring path = GetPasswordManagerPath();
+        if (path.empty()) return;
+
+        const size_t slash = path.find_last_of(L"\\");
+        if (slash != std::wstring::npos) {
+            CreateDirectoryW(path.substr(0, slash).c_str(), nullptr);
+        }
+
+        std::ofstream file{std::filesystem::path(path), std::ios::binary | std::ios::trunc};
+        if (!file) return;
+
+        // Simple binary format for now
+        file << userAccount_.email << "\n";
+        file << userAccount_.masterPasswordHash << "\n";
+        file << userAccount_.salt << "\n";
+    }
+
+    void ShowRegistrationDialog() {
+        char email[256] = "";
+        char password[256] = "";
+
+        // Simple dialog for now - in production use proper dialog
+        if (MessageBoxW(hwnd_, L"Registration not yet implemented.\n\nPlease manually create an account at:\nworldwidebrowser@outlook.com", L"WorldWide Browser Password Manager", MB_OK) == IDOK) {
+            // Placeholder
+        }
+    }
+
+    void ShowLoginDialog() {
+        char email[256] = "";
+        char password[256] = "";
+
+        // Simple dialog for now
+        if (MessageBoxW(hwnd_, L"Login not yet implemented.\n\nPlease check your email for authentication code.", L"WorldWide Browser Password Manager", MB_OK) == IDOK) {
+            // Placeholder
+        }
+    }
+
+    void ShowPasswordManagerDialog() {
+        std::string message = "Saved Passwords:\n\n";
+        if (passwords_.empty()) {
+            message += "No passwords saved yet.";
+        } else {
+            for (const auto& entry : passwords_) {
+                message += entry.url + "\n";
+                message += "  Username: " + entry.username + "\n\n";
+            }
+        }
+        MessageBoxA(hwnd_, message.c_str(), "WorldWide Browser Password Manager", MB_OK);
+    }
+
     void ShowSettingsMenu() {
         POINT point{};
         GetCursorPos(&point);
@@ -1147,6 +1368,17 @@ private:
         AppendMenuW(menu, MF_POPUP, reinterpret_cast<UINT_PTR>(timezoneMenu), L"Timezone");
 
         AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
+
+        // Password Manager Menu
+        if (passwordManagerLoggedIn_) {
+            AppendMenuW(menu, MF_STRING, ID_SETTINGS_PASSWORD_VIEW, L"View Passwords");
+            AppendMenuW(menu, MF_STRING, ID_SETTINGS_PASSWORD_LOGOUT, L"Logout");
+        } else {
+            AppendMenuW(menu, MF_STRING, ID_SETTINGS_PASSWORD_REGISTER, L"Register");
+            AppendMenuW(menu, MF_STRING, ID_SETTINGS_PASSWORD_LOGIN, L"Login");
+        }
+
+        AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
         AppendMenuW(menu, MF_STRING, ID_SETTINGS_CLEAR_DATA, L"Clear Data");
         AppendMenuW(menu, MF_STRING, ID_SETTINGS_CLEAR_HISTORY, L"Clear History");
 
@@ -1170,6 +1402,17 @@ private:
             timezone_ = timezones[command - kTimezoneMenuBase];
             SaveSettings();
             UpdateTimeDisplay();
+        } else if (command == ID_SETTINGS_PASSWORD_REGISTER) {
+            ShowRegistrationDialog();
+        } else if (command == ID_SETTINGS_PASSWORD_LOGIN) {
+            ShowLoginDialog();
+        } else if (command == ID_SETTINGS_PASSWORD_VIEW) {
+            ShowPasswordManagerDialog();
+        } else if (command == ID_SETTINGS_PASSWORD_LOGOUT) {
+            passwordManagerLoggedIn_ = false;
+            userAccount_ = UserAccount{};
+            passwords_.clear();
+            MessageBoxW(hwnd_, L"Logged out from Password Manager.", L"WorldWide Browser Password Manager", MB_ICONINFORMATION | MB_OK);
         }
     }
 

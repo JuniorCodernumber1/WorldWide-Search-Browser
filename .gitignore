@@ -32,3 +32,6 @@ desktop.ini
 third_party/webview2/*.nupkg
 third_party/webview2/*.zip
 webview2-index.json
+
+# Password manager database
+passwords.dat
